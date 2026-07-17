@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class user {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "username")
     private String username;
@@ -38,6 +38,7 @@ public class user {
     public void setEmail(String email) {this.email = email;}
     public void setStatus(String status) {this.status = status;}
     public void setWarningCount(int warningCount) {this.warningCount = warningCount;}
+    public void setUsername(String username) {this.username = username;}
     
     public int getId() {return id;}
     public String getPassword() {return password;}
@@ -45,4 +46,5 @@ public class user {
     public String getEmail() {return email;}
     public String getStatus() {return status;}
     public int getWarningCount() {return warningCount;}
+    public String getUsername() {return username;}
 }
