@@ -45,7 +45,7 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerPage() {
-        return "auth/register";
+        return "auth/login";
     }
 
     @PostMapping("/register")
@@ -56,7 +56,7 @@ public class AuthController {
             return "auth/login";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "auth/register";
+            return "auth/login";
         }
     }
     

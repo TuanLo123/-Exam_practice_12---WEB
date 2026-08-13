@@ -13,6 +13,7 @@ import com.example.project.dto.request.RegisterRequest;
 import com.example.project.entity.otp;
 import com.example.project.entity.user;
 import com.example.project.repository.OtpRepository;
+import com.example.project.repository.StudentRepository;
 import com.example.project.repository.UserRepository;
 import com.example.project.service.AuthService;
 import com.example.project.service.EmailService; 
@@ -27,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private OtpRepository otpRepository;
+
 
     @Override
     public String login(LoginRequest request) {
@@ -111,4 +113,6 @@ public class AuthServiceImpl implements AuthService {
         int number = random.nextInt(900000) + 100000;
         return String.valueOf(number);
     }
+
+    
 }

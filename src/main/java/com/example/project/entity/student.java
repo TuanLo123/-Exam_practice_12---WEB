@@ -2,128 +2,53 @@ package com.example.project.entity;
 
 import java.time.*;
 
-public class student {
+import jakarta.persistence.*;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "students")
+@Getter
+@Setter
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String password;
-    private String nameSchool;
-    private String username;
-    private LocalDateTime createdAt;
-    private String role;
-    private String gender;
+
+    @Column(name = "username_display")
+    private String usernameDisplay;
+
+    @Column(name = "star_count")
+    private int starCount;
+
+    @Column(name = "birthday")
+    private LocalDateTime birthday;
+
+    @Column(name = "school_name")
+    private String schoolName;
+
+    @Column(name = "user_id")
+    private int userId;
+
+    @Column(name = "avatar_url")
     private String avatarUrl;
-    private String email;
-    private boolean isDisabled;
-    private LocalDateTime lastActive;
-    private int warningCount;
 
-    public student(int id, String password, String nameSchool, String username, LocalDateTime createdAt, String role, String gender, String avatarUrl, String email, boolean isDisabled, LocalDateTime lastActive, int warningCount) {
+    @Column(name = "gender")
+    private String gender;
+
+    public Student() {
+
+    }
+
+    public Student(int id, String usernameDisplay, int starCount, LocalDateTime birthday, String schoolName, int userId, String avatarUrl, String gender) {
         this.id = id;
-        this.password = password;
-        this.nameSchool = nameSchool;
-        this.username = username;
-        this.createdAt = createdAt;
-        this.role = role;
+        this.usernameDisplay = usernameDisplay;
+        this.starCount = starCount;
+        this.birthday = birthday;
+        this.schoolName = schoolName;
+        this.userId = userId;
+        this.avatarUrl = avatarUrl;
         this.gender = gender;
-        this.avatarUrl = avatarUrl;
-        this.email = email;
-        this.isDisabled = isDisabled;
-        this.lastActive = lastActive;
-        this.warningCount = warningCount;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPasssword() {
-        return password;   
-    }
-
-    public void setNameSchool(String nameSchool) {
-        this.nameSchool = nameSchool;
-    }
-
-    public String getNameSchool() {
-        return nameSchool;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;      
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setIsDisabled(boolean isDisabled) {
-        this.isDisabled = isDisabled;
-    }
-
-    public boolean getIsDisabled() {
-        return isDisabled;
-    }
-
-    public void setLastActive(LocalDateTime lastActive) {
-        this.lastActive = lastActive;
-    }
-
-    public LocalDateTime getLastActive() {
-        return lastActive;
-    }
-
-    public void setWarningCount(int warningCount) {
-        this.warningCount = warningCount;
-    }
-
-    public int getWarningCount() {
-        return warningCount;
     }
 }

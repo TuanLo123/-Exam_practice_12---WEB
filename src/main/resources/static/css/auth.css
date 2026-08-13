@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif
+}
+
+body {
+    background: #f5f7fb
+}
+
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 680px;
+    display: flex;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .12)
+}
+
+.column-left,
+.column-right {
+    flex: 1
+}
+
+.column-left {
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    flex:1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.column-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+    overflow:hidden;
+}
+
+.swiper-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center
+}
+
+.swiper-slide img {
+    max-width: 320px;
+    width: 80%;
+    margin-bottom: 24px;
+    object-fit: contain
+}
+
+.brand-title {
+    font-size: 72px;
+    font-weight: 700;
+    color: #2f80ed
+}
+
+.slide-content h3 {
+    font-size: 28px;
+    margin: 14px 0;
+    color: #222
+}
+
+.slide-content p {
+    color: #666;
+    line-height: 1.6
+}
+
+.swiper-pagination-bullet-active {
+    background: #2f80ed !important
+}
+
+.auth-container {
+    width: 500px;
+    height: 600px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
+
+    dislay: flex;
+    flex-direction: column;
+}
+
+.btn {
+    width: 300px;
+    height: 60px;
+    margin: 20px auto;
+    border-radius: 50px;
+    background: #f1f3f5;
+    display: flex;
+    align-items: center;
+    position: relative
+}
+
+.btn button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 2
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 60px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #4facfe, #00c6ff);
+    transition: .4s
+}
+
+.moveslider {
+    left: 150px
+}
+
+.form-section {
+    width: 1000px;
+    height: 500px;
+    display: flex;
+    position: relative;
+    left: 0;
+    transition: .45s;
+
+    overflow: hidden;
+}
+
+.form-section-move {
+    left: -500px
+}
+
+.login-box {
+    width: 500px;
+    min-width: 500px;
+    height: 100%;
+
+    padding: 60px 40px 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.signup-box {
+    width: 500px;
+    min-width: 500px;
+    height: 100%;
+
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-box form,
+.signup-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px
+}
+
+.ele {
+    height: 55px;
+    border: none;
+    outline: none;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 0 18px;
+    font-size: 15px;
+    width:100%;
+}
+
+.ele:focus {
+    border: 2px solid #4facfe;
+    background: #fff
+}
+
+.clkbtn {
+    height: 55px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4facfe, #00c6ff);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+    width:100%;
+}
+
+.clkbtn:hover {
+    transform: translateY(-2px)
+}
+
+@media(max-width:900px) {
+    .login-wrapper {
+        flex-direction: column;
+        max-width: 520px
+    }
+
+    .column-left {
+        display: none
+    }
+
+    .auth-container {
+        width: 100%;
+        max-width: 500px
+    }
+}
