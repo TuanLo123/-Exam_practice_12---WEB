@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tài liệu — S15 Ôn luyện</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1976D2;--blue-d:#1565C0;--blue-l:#E3F2FD;--blue-ll:#F0F7FF;
+  --green:#388E3C;--green-l:#E8F5E9;
+  --orange:#F57C00;--orange-l:#FFF3E0;
+  --red:#D32F2F;--red-l:#FFEBEE;
+  --gray:#757575;--gray-l:#F5F5F5;
+  --text:#212121;--text2:#616161;
+  --border:#E0E0E0;--white:#fff;--bg:#F5F7FA;
+  --radius:15px;--shadow:0 2px 12px rgba(0,0,0,.08);
+}
+body{background:var(--bg);font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:0 20px;height:56px;display:flex;align-items:center;
+  gap:12px;margin-left:264px;position:sticky;top:0;z-index:50;
+  box-shadow:var(--shadow)
+}
+.page-header-title{font-size:18px;font-weight:800}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.notification-btn{align-items:center;background:var(--gray-l);border:0;border-radius:50%;display:flex;height:36px;justify-content:center;margin-right:8px;width:36px}
+.user-chip{display:flex;align-items:center;gap:8px;cursor:pointer}
+.user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#42A5F5);color:white;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.user-name{font-size:14px;font-weight:600}
+
+/* ── DRAWER ── */
+.document-layout{display:block;min-height:calc(100vh - 56px)}
+.document-drawer{background:var(--white);border-right:1px solid var(--border);bottom:0;display:flex;flex-direction:column;left:0;padding:20px 12px;position:fixed;top:0;width:264px;z-index:60}
+.drawer-brand{align-items:center;display:flex;gap:10px;margin-bottom:22px;padding:5px 10px 17px}.drawer-logo{align-items:center;background:var(--blue);border-radius:10px;color:white;display:flex;font-weight:900;height:38px;justify-content:center;width:38px}.drawer-heading{font-size:16px;font-weight:800}.drawer-subtitle{color:var(--gray);font-size:11px;margin-top:2px}
+.drawer-menu{flex:1}.drawer-section{color:var(--gray);font-size:10px;font-weight:800;letter-spacing:.08em;padding:9px 12px;text-transform:uppercase}.drawer-item{align-items:center;background:none;border:0;border-radius:10px;color:var(--text2);display:flex;font-weight:650;gap:11px;margin-bottom:5px;padding:12px 13px;text-align:left;width:100%}.drawer-item:hover{background:var(--gray-l)}.drawer-item.active{background:var(--blue-l);color:var(--blue)}.drawer-icon{font-size:18px;width:22px}.drawer-logout{border-top:1px solid var(--border);padding-top:12px}.drawer-logout .drawer-item{color:var(--red)}
+.tab-bar{border-bottom:1px solid var(--border);display:flex;margin-bottom:22px;overflow-x:auto}
+.tab-btn{
+  border:none;border-bottom:3px solid transparent;background:none;color:var(--gray);cursor:pointer;
+  flex:0 0 auto;font-size:14px;font-weight:700;margin-bottom:-1px;padding:13px 16px;transition:all .2s
+}
+.tab-btn.active{border-bottom-color:var(--blue);color:var(--blue)}
+
+/* ── CONTENT ── */
+.content{margin-left:264px;min-width:0;padding:34px max(24px,calc((100vw - 264px - 1180px)/2));width:calc(100% - 264px)}
+
+/* ── SECTION TITLE ── */
+.sec-title{font-size:18px;font-weight:800;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--gray);margin-bottom:18px}
+
+/* ── FILTER BAR ── */
+.filter-row{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.search-box{
+  flex:1;min-width:200px;display:flex;align-items:center;gap:8px;
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:0 14px;transition:border .2s
+}
+.search-box:focus-within{border-color:var(--blue)}
+.search-box input{flex:1;border:none;outline:none;padding:11px 0;font-size:14px;background:transparent;color:var(--text)}
+.filter-select{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:11px 14px;font-size:14px;
+  color:var(--text);cursor:pointer;outline:none;min-width:160px
+}
+.filter-select:focus{border-color:var(--blue)}
+
+/* ── DOC GRID ── */
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.doc-card{
+  background:var(--white);border-radius:var(--radius);
+  border:1.5px solid var(--border);padding:16px;
+  cursor:pointer;transition:all .2s;position:relative
+}
+.doc-card:hover{border-color:var(--blue);box-shadow:var(--shadow);transform:translateY(-2px)}
+.doc-card-top{display:flex;gap:12px;margin-bottom:10px}
+.doc-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.doc-name{font-size:14px;font-weight:700;line-height:1.4;margin-bottom:3px}
+.doc-meta{font-size:12px;color:var(--gray)}
+.doc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;padding:3px 8px;border-radius:8px;font-weight:600}
+.tag-subject{background:var(--blue-l);color:var(--blue)}
+.tag-cat{background:var(--orange-l);color:var(--orange)}
+.status-dot{position:absolute;top:12px;right:12px;width:8px;height:8px;border-radius:50%}
+.status-dot.APPROVED{background:var(--green)}
+.status-dot.PENDING{background:#FFC107}
+.status-dot.REJECTED{background:var(--red)}
+.reject-banner{background:var(--red-l);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:12px;color:var(--red)}
+.doc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.doc-uploader{font-size:12px;color:var(--gray)}
+.btn-view{background:var(--blue-l);color:var(--blue);border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none}
+.btn-view:hover{background:var(--blue);color:white}
+
+/* ── UPLOAD FORM ── */
+.upload-card{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--border);padding:24px;margin-bottom:20px}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.form-label .req{color:var(--red)}
+.form-input{
+  width:100%;background:var(--gray-l);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:11px 14px;font-size:14px;
+  color:var(--text);outline:none;transition:all .2s;font-family:inherit
+}
+.form-input:focus{background:var(--white);border-color:var(--blue);box-shadow:0 0 0 3px #1976D215}
+.form-input::placeholder{color:#BDBDBD}
+/* combobox */
+.form-select{appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23757575' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:40px
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* FILE DROP */
+.file-drop{
+  border:2px dashed var(--border);border-radius:var(--radius);
+  padding:32px 20px;text-align:center;cursor:pointer;
+  transition:all .2s;background:var(--gray-l)
+}
+.file-drop:hover,.file-drop.over{border-color:var(--blue);background:var(--blue-ll)}
+.file-drop input{display:none}
+.file-drop-icon{font-size:40px;margin-bottom:8px}
+.file-drop-title{font-size:15px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.file-drop-sub{font-size:12px;color:var(--gray)}
+.file-preview{
+  display:flex;align-items:center;gap:12px;
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:12px 14px;margin-top:10px
+}
+.file-preview-icon{font-size:28px}
+.file-preview-info{flex:1}
+.file-preview-name{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-preview-size{font-size:11px;color:var(--gray);margin-top:2px}
+.btn-remove{background:var(--red-l);border:none;border-radius:6px;padding:5px 8px;color:var(--red);cursor:pointer;font-size:12px;font-weight:700}
+
+/* PROGRESS */
+.prog-wrap{margin-top:10px;display:none}
+.prog-bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--blue);width:0;transition:width .3s;border-radius:4px}
+.prog-text{font-size:12px;color:var(--gray);text-align:right;margin-top:3px}
+
+/* BUTTONS */
+.btn-main{
+  width:100%;height:50px;background:var(--blue);color:white;
+  border:none;border-radius:var(--radius);font-size:16px;
+  font-weight:700;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;transition:background .2s
+}
+.btn-main:hover{background:var(--blue-d)}
+.btn-main:disabled{background:#90CAF9;cursor:not-allowed}
+
+/* MY DOCS STATUS */
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700}
+.s-approved{background:var(--green-l);color:var(--green)}
+.s-pending{background:#FFF8E1;color:#F57F17}
+.s-rejected{background:var(--red-l);color:var(--red)}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--gray)}
+.empty-icon{font-size:56px;margin-bottom:12px}
+
+/* SPINNER */
+.spinner{width:20px;height:20px;border:3px solid #ffffff50;border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:#323232;color:white;padding:12px 18px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(10px);transition:all .3s;z-index:999;display:flex;align-items:center;gap:8px;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{background:var(--green)}.toast.error{background:var(--red)}.toast.warning{background:var(--orange)}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:#00000060;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:transform .25s}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--white)}
+.modal-title{font-size:16px;font-weight:800}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--gray-l)}
+.modal-body{padding:18px 20px}
+
+.overlay{background:rgba(0,0,0,.35);display:none;inset:0;position:fixed;z-index:999}.sidebar{background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;left:0;padding:22px 16px;position:fixed;top:0;width:270px;z-index:1000}.logo{align-items:center;display:flex;gap:10px;padding:5px 10px 25px}.logo-icon{align-items:center;background:#1877f2;border-radius:12px;color:white;display:flex;font-size:20px;font-weight:800;height:40px;justify-content:center;width:40px}.logo-text{color:#1877f2;font-size:21px;font-weight:800}.menu{display:flex;flex-direction:column;gap:5px}.menu-title{color:#9ca3af;font-size:12px;font-weight:700;padding:12px 12px 7px;text-transform:uppercase}.menu-item{align-items:center;background:transparent;border:0;border-radius:10px;color:#4b5563;display:flex;font-size:14px;gap:13px;padding:12px;text-align:left;transition:.2s;width:100%}.menu-item:hover{background:#f4f8ff;color:#1877f2}.menu-item.active{background:#eaf3ff;color:#1877f2;font-weight:600}.menu-icon{align-items:center;display:flex;flex-shrink:0;font-size:18px;height:21px;justify-content:center;width:21px}.sidebar-bottom{margin-top:auto}.logout{color:#ef4444}.logout:hover{background:#fff1f2;color:#ef4444}.main{margin-left:270px;min-height:100vh}.main .topbar{height:70px;margin-left:0;padding:0 35px}.mobile-menu{background:transparent;border:0;display:none;font-size:25px}.page-title{font-size:20px;font-weight:700}.notification{background:#f4f8ff;border:0;border-radius:50%;color:#1877f2;font-size:18px;height:40px;width:40px}.user-mini{align-items:center;display:flex;gap:10px;padding-left:10px}.user-mini img{border-radius:50%;height:38px;object-fit:cover;width:38px}.main .content{margin-left:0;padding:34px max(24px,calc((100vw - 270px - 1180px)/2));width:100%}
+@media(max-width:700px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.overlay.show{display:block}.main{margin-left:0}.mobile-menu{display:block}.main .topbar{padding:0 18px}.user-mini span{display:none}.main .content{padding:20px 15px}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="logo"><div class="logo-icon">S</div><div class="logo-text">S15 Ôn luyện</div></div>
+  <div class="menu">
+    <div class="menu-title">Tài khoản</div>
+    <button class="menu-item" onclick="window.location.href='/home'"><span class="menu-icon">🏠</span>Trang chủ</button>
+    <button class="menu-item active"><span class="menu-icon">📚</span>Tài liệu</button>
+    <button class="menu-item" onclick="window.location.href='/home?page=profile'"><span class="menu-icon">👤</span>Chỉnh sửa thông tin</button>
+    <button class="menu-item" onclick="window.location.href='/home?page=password'"><span class="menu-icon">🔐</span>Đổi mật khẩu</button>
+    <div class="menu-title">Cá nhân</div>
+    <button class="menu-item" onclick="window.location.href='/home?page=history'"><span class="menu-icon">🕘</span>Lịch sử truy cập</button>
+    <button class="menu-item" onclick="window.location.href='/home?page=favorites'"><span class="menu-icon">❤️</span>Tài liệu yêu thích</button>
+  </div>
+  <div class="sidebar-bottom"><button class="menu-item logout" onclick="logoutUser()"><span class="menu-icon">🚪</span>Đăng xuất</button></div>
+</aside>
+<main class="main">
+<header class="topbar">
+  <button class="mobile-menu" onclick="toggleDrawer()">☰</button>
+  <div class="page-title">Tài liệu</div>
+  <div class="topbar-right"><button class="notification">🔔</button><div class="user-mini"><img id="topAvatar" src="https://ui-avatars.com/api/?name=Hoc+sinh&background=1877F2&color=fff" alt="avatar"><span id="topUsername">Học sinh</span></div></div>
+</header>
+<div class="content">
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('browse',this)">📚 Tài liệu</button>
+  <button class="tab-btn" onclick="switchTab('upload',this)">📤 Đề xuất tài liệu</button>
+  <button class="tab-btn" onclick="switchTab('my',this)">📂 Tài liệu của tôi</button>
+</div>
+
+  
+  <div id="tab-browse">
+    <div class="sec-title">📚 Kho tài liệu</div>
+    <div class="sec-sub">Tài liệu đã được kiểm duyệt bởi giáo viên</div>
+
+    <div class="filter-row">
+      <div class="search-box">
+        <span>🔍</span>
+        <input id="searchInput" placeholder="Tìm tên tài liệu..." oninput="filterDocs()">
+      </div>
+      <select class="filter-select" id="filterSubject" onchange="filterDocs()">
+        <option value="">📚 Tất cả môn học</option>
+      </select>
+      <select class="filter-select" id="filterType" onchange="filterDocs()">
+        <option value="">📂 Tất cả loại tài liệu</option>
+        <option value="Đề thi">Đề thi</option>
+        <option value="Lý thuyết">Lý thuyết</option>
+        <option value="Bài tập">Bài tập</option>
+        <option value="Tóm tắt">Tóm tắt</option>
+        <option value="Video bài giảng">Video bài giảng</option>
+      </select>
+    </div>
+
+    <div class="doc-grid" id="docGrid">
+      <div class="empty"><div class="empty-icon">⏳</div><div>Đang tải...</div></div>
+    </div>
+  </div>
+
+  
+  <div id="tab-upload" style="display:none">
+    <div class="sec-title">📤 Đề xuất tài liệu</div>
+    <div class="sec-sub">Tài liệu sẽ được gửi đến admin để kiểm duyệt trước khi hiển thị</div>
+
+    <div class="upload-card">
+      
+      <div class="form-group">
+        <label class="form-label">Tên tài liệu <span class="req">*</span></label>
+        <input type="text" id="upDocName" class="form-input" placeholder="VD: Đề thi THPT Quốc gia Toán 2024" maxlength="255">
+      </div>
+
+      <div class="form-row">
+        
+        <div class="form-group">
+          <label class="form-label">Môn học <span class="req">*</span></label>
+          <select id="upSubject" class="form-input form-select">
+            <option value="">— Chọn môn học —</option>
+          </select>
+        </div>
+
+        
+        <div class="form-group">
+          <label class="form-label">Loại tài liệu <span class="req">*</span></label>
+          <select id="upType" class="form-input form-select">
+            <option value="">— Chọn loại tài liệu —</option>
+            <option value="Đề thi">Đề thi</option>
+            <option value="Lý thuyết">Lý thuyết</option>
+            <option value="Bài tập">Bài tập</option>
+            <option value="Tóm tắt">Tóm tắt</option>
+            <option value="Video bài giảng">Video bài giảng</option>
+          </select>
+        </div>
+      </div>
+
+      
+      <div class="form-group">
+        <label class="form-label">File tài liệu <span class="req">*</span></label>
+        <div class="file-drop" id="fileDrop"
+          ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)"
+          onclick="document.getElementById('fileInp').click()">
+          <input type="file" id="fileInp" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.mp4,.mp3" onchange="onFileSelect(this.files[0])">
+          <div class="file-drop-icon">📎</div>
+          <div class="file-drop-title">Kéo thả file vào đây hoặc nhấn để chọn</div>
+          <div class="file-drop-sub">PDF, Word, PowerPoint, Excel, Video, Audio — Tối đa 50MB</div>
+        </div>
+        <div class="file-preview" id="filePreview" style="display:none">
+          <span class="file-preview-icon" id="fpIcon">📄</span>
+          <div class="file-preview-info">
+            <div class="file-preview-name" id="fpName"></div>
+            <div class="file-preview-size" id="fpSize"></div>
+          </div>
+          <button class="btn-remove" onclick="removeFile()">✕ Xoá</button>
+        </div>
+        <div class="prog-wrap" id="progWrap">
+          <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+          <div class="prog-text" id="progText">0%</div>
+        </div>
+      </div>
+
+      
+      <div class="form-group">
+        <label class="form-label">Ghi chú (tuỳ chọn)</label>
+        <textarea id="upNote" class="form-input" rows="3" placeholder="Mô tả thêm về tài liệu này..."></textarea>
+      </div>
+
+      <button class="btn-main" id="btnUpload" onclick="submitUpload()">
+        <span id="btnUpTxt">📤 Gửi đề xuất</span>
+        <div class="spinner" id="spinUp" style="display:none"></div>
+      </button>
+    </div>
+
+  </div>
+
+  
+  <div id="tab-my" style="display:none">
+    <div class="sec-title">📂 Tài liệu của tôi</div>
+    <div class="sec-sub">Theo dõi trạng thái các tài liệu bạn đã đề xuất</div>
+    <div id="myDocList">
+      <div class="empty"><div class="empty-icon">📭</div><div>Bạn chưa đề xuất tài liệu nào</div></div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+
+<div class="modal-bg" id="docModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalDocName">Chi tiết tài liệu</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalDocBody"></div>
+  </div>
+</div>
+
+<script>
+const BASE = '';
+const getToken = () => localStorage.getItem('jwt_token') || '';
+const getUserId = () => {
+  try { return JSON.parse(localStorage.getItem('user_info')||'{}').id || 1; }
+  catch { return 1; }
+};
+const SUBJECT_ICONS = {1:'🔢',2:'⚡',3:'🧪',4:'🔬',5:'📖',6:'🌏',7:'🏛️',8:'🗺️'};
+const FILE_ICONS = {pdf:'📕',doc:'📘',docx:'📘',ppt:'📙',pptx:'📙',xls:'📗',xlsx:'📗',mp4:'🎬',mp3:'🎵'};
+
+let allDocs = [];
+let selectedFile = null;
+window.addEventListener('load', async () => {
+  loadUserInfo();
+  updateUploadMode();
+  await Promise.all([loadSubjects(), loadDocs()]);
+});
+
+function updateUploadMode() {
+  if (localStorage.getItem('user_role') !== 'ADMIN') return;
+  document.querySelectorAll('.tab-btn')[1].textContent = '📤 Đăng tài liệu';
+  document.querySelector('#tab-upload .sec-title').textContent = '📤 Đăng tài liệu';
+  document.querySelector('#tab-upload .sec-sub').textContent = 'Tài liệu của Admin sẽ được duyệt và hiển thị ngay';
+  document.getElementById('btnUpTxt').textContent = '📤 Đăng tài liệu';
+}
+
+async function loadUserInfo() {
+  try {
+    const response = await fetch('/api/auth/me');
+
+    if (!response.ok) {
+      window.location.href = '/login';
+      return;
+    }
+
+    const user = await response.json();
+    localStorage.setItem('user_role', user.role);
+    localStorage.setItem('user_info', JSON.stringify(user));
+    document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=1877F2&color=fff`;
+    document.getElementById('topUsername').textContent = user.role === 'ADMIN'
+      ? user.username + ' • Quản trị viên'
+      : user.username + ' • Học sinh';
+    const studentResponse = await fetch('/api/students/me');
+    if (studentResponse.ok) {
+      const student = await studentResponse.json();
+      if (student.avatarUrl) document.getElementById('topAvatar').src = student.avatarUrl;
+    }
+    updateUploadMode();
+  } catch(e) {
+    showToast('Không lấy được thông tin đăng nhập', 'error');
+  }
+}
+async function loadSubjects() {
+  let subjects = [];
+  try {
+    const r = await fetch(`${BASE}/api/subjects`);
+    if(r.ok) subjects = await r.json();
+  } catch(e) {}
+  const sel = document.getElementById('filterSubject');
+  const upSel = document.getElementById('upSubject');
+  subjects.forEach(s => {
+    sel.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+    upSel.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+  });
+}
+
+async function loadDocs() {
+  allDocs = [];
+  try {
+    const r = await fetch(`${BASE}/api/documents`);
+    if(r.ok) allDocs = await r.json();
+  } catch(e) {}
+  renderDocs(allDocs);
+}
+
+async function loadMyDocs() {
+  let myDocs = [];
+  try {
+    const r = await fetch(`${BASE}/api/documents/my`);
+    if(r.ok) myDocs = await r.json();
+  } catch(e) {}
+  renderMyDocs(myDocs);
+}
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  ['browse','upload','my'].forEach(t =>
+    document.getElementById('tab-'+t).style.display = t===name ? 'block' : 'none'
+  );
+  if(name==='my') loadMyDocs();
+}
+function renderDocs(docs) {
+  const grid = document.getElementById('docGrid');
+  if(!docs.length) { grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📭</div><div>Không tìm thấy tài liệu nào</div></div>`; return; }
+
+  grid.innerHTML = docs.map(d => {
+    const ext = d.fileUrl ? d.fileUrl.split('.').pop().toLowerCase() : 'pdf';
+    const icon = FILE_ICONS[ext] || '📄';
+    const si = SUBJECT_ICONS[d.subjectId] || '📚';
+    return `
+    <div class="doc-card" onclick="openDocModal(${d.id})">
+      <div class="status-dot APPROVED"></div>
+      <div class="doc-card-top">
+        <div class="doc-icon" style="background:var(--blue-l)">${icon}</div>
+        <div>
+          <div class="doc-name">${d.name}</div>
+          <div class="doc-meta">Bởi: ${d.uploadedByUsername || d.uploadedBy || 'Ẩn danh'}</div>
+        </div>
+      </div>
+      <div class="doc-tags">
+        <span class="tag tag-subject">${si} ${d.subjectName || ''}</span>
+        <span class="tag tag-cat">📂 ${d.type || ''}</span>
+      </div>
+      <div class="doc-footer">
+        <span class="doc-uploader">📅 ${(d.createdAt||'').slice(0,10)}</span>
+        <button class="btn-view" onclick="event.stopPropagation();toggleStar(${d.id},${d.starred})">⭐ ${d.starCount||0}</button>
+        <button class="btn-view" onclick="event.stopPropagation();viewDocument(${d.id})">👁️ Xem</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterDocs() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const sId = document.getElementById('filterSubject').value;
+  const type = document.getElementById('filterType').value;
+  renderDocs(allDocs.filter(d => {
+    const mq = !q || d.name.toLowerCase().includes(q);
+    const ms = !sId || String(d.subjectId)===sId;
+    const mt = !type || d.type===type;
+    return mq && ms && mt;
+  }));
+}
+
+async function toggleStar(id, starred) {
+  const response = await fetch(`${BASE}/api/documents/${id}/stars`, {
+    method: starred ? 'DELETE' : 'POST'
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    showToast(data.error || 'Không thể cập nhật Star', 'error');
+    return;
+  }
+
+  await loadDocs();
+}
+function renderMyDocs(docs) {
+  const el = document.getElementById('myDocList');
+  if(!docs.length) { el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><div>Bạn chưa đề xuất tài liệu nào</div></div>`; return; }
+
+  el.innerHTML = docs.map(d => {
+    const statusMap = {APPROVED:'s-approved',PENDING:'s-pending',REJECTED:'s-rejected'};
+    const statusLabel = {APPROVED:'✅ Đã duyệt',PENDING:'⏳ Chờ duyệt',REJECTED:'❌ Từ chối'};
+    return `
+    <div class="doc-card" style="margin-bottom:12px">
+      <div class="doc-card-top">
+        <div class="doc-icon" style="background:var(--orange-l)">📄</div>
+        <div style="flex:1">
+          <div class="doc-name">${d.name}</div>
+          <div class="doc-meta">${d.subjectName||''} • ${d.type||''}</div>
+        </div>
+        <span class="status-badge ${statusMap[d.status]||'s-pending'}">${statusLabel[d.status]||d.status}</span>
+      </div>
+      ${d.status==='REJECTED'&&d.rejectReason?`
+      <div class="reject-banner">
+        <strong>Lý do từ chối:</strong> ${d.rejectReason}
+      </div>` : ''}
+      <div class="doc-footer">
+        <span class="doc-uploader">📅 ${(d.createdAt||'').slice(0,10)}</span>
+        ${d.status==='REJECTED'?`<button class="btn-view" onclick="switchTab('upload',document.querySelectorAll('.tab-btn')[1])">🔄 Gửi lại</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function onDragOver(e){e.preventDefault();document.getElementById('fileDrop').classList.add('over')}
+function onDragLeave(){document.getElementById('fileDrop').classList.remove('over')}
+function onDrop(e){e.preventDefault();document.getElementById('fileDrop').classList.remove('over');if(e.dataTransfer.files[0])onFileSelect(e.dataTransfer.files[0])}
+
+function onFileSelect(file) {
+  if(!file) return;
+  if(file.size>50*1024*1024){ showToast('File quá lớn! Tối đa 50MB','error'); return; }
+  const ext = file.name.split('.').pop().toLowerCase();
+  if(!['pdf','doc','docx','ppt','pptx','xls','xlsx','mp4','mp3'].includes(ext)){
+    showToast('Định dạng file không hỗ trợ: .'+ext,'error'); return;
+  }
+  selectedFile = file;
+  document.getElementById('fpIcon').textContent = FILE_ICONS[ext]||'📄';
+  document.getElementById('fpName').textContent = file.name;
+  document.getElementById('fpSize').textContent = fmtSize(file.size);
+  document.getElementById('filePreview').style.display='flex';
+  document.getElementById('fileDrop').style.display='none';
+}
+function removeFile(){ selectedFile=null; document.getElementById('fileInp').value=''; document.getElementById('filePreview').style.display='none'; document.getElementById('fileDrop').style.display='block'; }
+function fmtSize(b){ return b<1024?b+'B':b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(1)+'MB'; }
+
+async function submitUpload() {
+  const name = document.getElementById('upDocName').value.trim();
+  const subjectId = document.getElementById('upSubject').value;
+  const type = document.getElementById('upType').value;
+  if(!name){ showToast('Vui lòng nhập tên tài liệu','error'); return; }
+  if(!subjectId){ showToast('Vui lòng chọn môn học','error'); return; }
+  if(!type){ showToast('Vui lòng chọn loại tài liệu','error'); return; }
+  if(!selectedFile){ showToast('Vui lòng chọn file','error'); return; }
+
+  const btn = document.getElementById('btnUpload');
+  btn.disabled = true;
+  document.getElementById('btnUpTxt').textContent='Đang upload 0%';
+  document.getElementById('spinUp').style.display='block';
+  document.getElementById('progWrap').style.display='block';
+  document.getElementById('progText').textContent='Đang upload 0%';
+
+  try {
+    const fd = new FormData();
+    fd.append('file', selectedFile);
+    fd.append('name', name);
+    fd.append('subjectId', subjectId);
+    fd.append('type', type);
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => {
+      if(e.lengthComputable){
+        const p = Math.round(e.loaded/e.total*100);
+        document.getElementById('progFill').style.width=p+'%';
+        document.getElementById('progText').textContent='Đang upload '+p+'%';
+        document.getElementById('btnUpTxt').textContent='Đang upload '+p+'%';
+      }
+    };
+    xhr.upload.onload = () => {
+      document.getElementById('progFill').style.width='100%';
+      document.getElementById('progText').textContent='Đã gửi 100% • Đang xử lý...';
+      document.getElementById('btnUpTxt').textContent='Đang xử lý...';
+    };
+    const result = await new Promise((res,rej) => {
+      xhr.onload = () => {
+        let body = {};
+        try {
+          body = JSON.parse(xhr.responseText || '{}');
+        } catch (error) {
+          body = {error: xhr.responseText || `HTTP ${xhr.status}`};
+        }
+        res({ok:xhr.status>=200&&xhr.status<300, body});
+      };
+      xhr.onerror = () => rej(new Error('Network error'));
+      const role = localStorage.getItem('user_role');
+      const uploadUrl = role === 'ADMIN' ? '/api/admin/documents' : '/api/documents/proposals';
+      xhr.open('POST',`${BASE}${uploadUrl}`);
+      xhr.send(fd);
+    });
+    if(result.ok){
+      showToast('✅ Đã gửi! Tài liệu đang chờ duyệt','success');
+      document.getElementById('upDocName').value='';
+      document.getElementById('upSubject').value='';
+      document.getElementById('upType').value='';
+      removeFile();
+      loadMyDocs();
+    } else {
+      showToast(result.body.error||'Upload thất bại','error');
+    }
+  } catch(e) {
+    showToast('Không thể kết nối đến server','error');
+  } finally {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    btn.disabled=false;
+    document.getElementById('btnUpTxt').textContent=localStorage.getItem('user_role')==='ADMIN'?'📤 Đăng tài liệu':'📤 Gửi đề xuất';
+    document.getElementById('spinUp').style.display='none';
+    document.getElementById('progWrap').style.display='none';
+    document.getElementById('progFill').style.width='0';
+    document.getElementById('progText').textContent='Đang upload 0%';
+  }
+}
+function openDocModal(id) {
+  const d = allDocs.find(x=>x.id===id);
+  if(!d) return;
+  document.getElementById('modalDocName').textContent = d.name;
+  document.getElementById('modalDocBody').innerHTML = `
+    <div style="display:flex;gap:12px;margin-bottom:14px">
+      <div style="font-size:40px">${FILE_ICONS[d.fileUrl?.split('.').pop()]||'📄'}</div>
+      <div>
+        <div style="font-size:14px;color:var(--gray)">Môn học: <strong>${d.subjectName||''}</strong></div>
+        <div style="font-size:14px;color:var(--gray)">Loại tài liệu: <strong>${d.type||''}</strong></div>
+        <div style="font-size:14px;color:var(--gray)">Người upload: <strong>${d.uploadedByUsername||''}</strong></div>
+        <div style="font-size:14px;color:var(--gray)">Ngày đăng: <strong>${(d.createdAt||'').slice(0,10)}</strong></div>
+      </div>
+    </div>
+    <button onclick="viewDocument(${d.id})" class="btn-main" style="margin-top:8px">
+      📥 Tải xuống / Xem tài liệu
+    </button>`;
+  document.getElementById('docModal').classList.add('open');
+}
+async function viewDocument(id){const openedWindow=window.open('','_blank');const response=await fetch(`${BASE}/api/documents/${id}/access`,{method:'POST'});if(!response.ok){if(openedWindow)openedWindow.close();showToast('Không thể mở tài liệu','error');return}const documentItem=await response.json();if(openedWindow)openedWindow.location.href=documentItem.fileUrl}
+function closeModal(){ document.getElementById('docModal').classList.remove('open'); }
+document.getElementById('docModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(t._t); t._t=setTimeout(()=>t.className='toast '+type,3000);
+}
+async function logoutUser(){await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('jwt_token');localStorage.removeItem('student_info');window.location.href='/login'}
+function toggleDrawer(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+function closeDrawer(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show')}
+if(sessionStorage.getItem('login_success')==='true'){sessionStorage.removeItem('login_success');setTimeout(()=>showToast('Đăng nhập thành công!','success'),200)}
+</script>
+</body>
+</html>

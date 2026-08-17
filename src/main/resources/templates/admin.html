@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S15 Admin — Quản lý tài khoản</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1877F2;--blue-dark:#166FE5;--blue-light:#E7F3FF;
+  --white:#fff;--bg:#F0F2F5;--text:#1C1E21;--muted:#65676B;
+  --border:#DADDE1;--green:#31A24C;--green-light:#E7F7EB;
+  --red:#E41E3F;--red-light:#FDECEF;--orange:#F7B928;
+  --sidebar:250px;--topbar:64px;--radius:12px;
+  --shadow:0 2px 10px rgba(0,0,0,.08)
+}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI",Arial,sans-serif;min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{background:var(--white);border-right:1px solid var(--border);bottom:0;display:flex;flex-direction:column;left:0;position:fixed;top:0;width:var(--sidebar);z-index:20}
+.brand{align-items:center;border-bottom:1px solid var(--border);display:flex;height:var(--topbar);padding:0 20px}
+.brand-mark{background:var(--blue);border-radius:10px;color:white;font-size:18px;font-weight:900;margin-right:10px;padding:8px}
+.brand-name{font-size:17px;font-weight:800}.brand-name span{color:var(--blue)}
+.nav{flex:1;padding:16px 10px}
+.nav-title{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.07em;padding:8px 12px;text-transform:uppercase}
+.nav-item{align-items:center;border-radius:9px;color:var(--muted);display:flex;font-size:14px;font-weight:600;gap:12px;padding:12px}
+.nav-item.active{background:var(--blue-light);color:var(--blue)}
+.nav-icon{font-size:19px;width:22px}
+.admin-profile{align-items:center;border-top:1px solid var(--border);display:flex;gap:10px;padding:16px}
+.admin-avatar{align-items:center;background:var(--blue);border-radius:50%;color:white;display:flex;font-weight:800;height:40px;justify-content:center;width:40px}
+.admin-profile strong{display:block;font-size:13px}.admin-profile small{color:var(--muted);font-size:11px}
+.main{margin-left:var(--sidebar);min-width:0;width:calc(100% - var(--sidebar))}
+.topbar{align-items:center;background:var(--white);border-bottom:1px solid var(--border);display:flex;height:var(--topbar);padding:0 24px;position:sticky;top:0;z-index:10}
+.menu-btn{background:none;border:0;display:none;font-size:22px;margin-right:12px}
+.page-title{font-size:18px;font-weight:800}.top-spacer{flex:1}
+.logout{background:var(--blue-light);border:0;border-radius:8px;color:var(--blue);font-size:13px;font-weight:700;padding:9px 14px}
+.content{padding:24px}
+.welcome{margin-bottom:20px}.welcome h1{font-size:25px;margin-bottom:4px}.welcome p{color:var(--muted);font-size:14px}
+.stats{display:grid;gap:14px;grid-template-columns:repeat(4,1fr);margin-bottom:20px}
+.stat{align-items:center;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;gap:13px;padding:17px}
+.stat-icon{align-items:center;background:var(--blue-light);border-radius:12px;display:flex;font-size:22px;height:46px;justify-content:center;width:46px}
+.stat strong{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12px}
+.panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel-head{align-items:center;border-bottom:1px solid var(--border);display:flex;gap:12px;padding:17px 18px}
+.panel-head h2{font-size:17px}.panel-head p{color:var(--muted);font-size:12px;margin-top:2px}.head-spacer{flex:1}
+.add-btn{background:var(--blue);border:0;border-radius:9px;color:white;font-size:13px;font-weight:700;padding:10px 15px}.add-btn:hover{background:var(--blue-dark)}
+.filters{border-bottom:1px solid var(--border);display:flex;gap:10px;padding:13px 18px}
+.search{align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:9px;display:flex;flex:1;gap:8px;padding:0 12px}
+.search:focus-within{background:white;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,119,242,.1)}
+.search input{background:none;border:0;outline:0;padding:10px 0;width:100%}
+.filter-select{background:white;border:1px solid var(--border);border-radius:9px;color:var(--text);outline:0;padding:0 12px}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%}
+th{background:#FAFBFC;color:var(--muted);font-size:11px;letter-spacing:.04em;padding:11px 15px;text-align:left;text-transform:uppercase;white-space:nowrap}
+td{border-top:1px solid #EDF0F2;font-size:13px;padding:13px 15px;vertical-align:middle}tbody tr:hover{background:#FAFBFF}
+.user{align-items:center;display:flex;gap:10px}.avatar{align-items:center;background:var(--blue-light);border-radius:50%;color:var(--blue);display:flex;font-weight:800;height:38px;justify-content:center;width:38px}
+.user strong{display:block;font-size:13px}.user small{color:var(--muted)}
+.badge{border-radius:20px;display:inline-block;font-size:11px;font-weight:700;padding:4px 9px}.active-badge{background:var(--green-light);color:var(--green)}.locked-badge{background:var(--red-light);color:var(--red)}
+.role{background:var(--blue-light);border-radius:6px;color:var(--blue);font-size:11px;font-weight:700;padding:4px 8px}
+.actions{display:flex;gap:6px}.icon-btn{align-items:center;background:var(--bg);border:0;border-radius:7px;display:flex;height:31px;justify-content:center;width:31px}.icon-btn:hover{background:var(--blue-light)}
+.pagination{align-items:center;border-top:1px solid var(--border);display:flex;justify-content:space-between;padding:13px 18px}.pagination span{color:var(--muted);font-size:12px}
+.pages{display:flex;gap:5px}.page-btn{background:white;border:1px solid var(--border);border-radius:7px;height:31px;width:31px}.page-btn.active{background:var(--blue);border-color:var(--blue);color:white}
+.empty{color:var(--muted);display:none;padding:42px;text-align:center}
+.modal-bg{align-items:center;background:rgba(0,0,0,.48);display:flex;inset:0;justify-content:center;opacity:0;padding:18px;pointer-events:none;position:fixed;transition:.2s;z-index:100}.modal-bg.open{opacity:1;pointer-events:auto}
+.modal{background:white;border-radius:15px;box-shadow:0 20px 60px rgba(0,0,0,.2);max-width:480px;overflow:hidden;transform:translateY(15px);transition:.2s;width:100%}.modal-bg.open .modal{transform:none}
+.modal-head{align-items:center;border-bottom:1px solid var(--border);display:flex;padding:17px 20px}.modal-head h3{flex:1}.close{background:none;border:0;color:var(--muted);font-size:22px}
+.modal-body{padding:20px}.grid-2{display:grid;gap:13px;grid-template-columns:1fr 1fr}.field{margin-bottom:14px}.field.full{grid-column:1/-1}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.field input,.field select{background:var(--bg);border:1px solid var(--border);border-radius:9px;outline:0;padding:11px 12px;width:100%}.field input:focus,.field select:focus{background:white;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,119,242,.1)}
+.modal-foot{border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end;padding:14px 20px}.cancel{background:white;border:1px solid var(--border);border-radius:8px;padding:9px 15px}.save{background:var(--blue);border:0;border-radius:8px;color:white;font-weight:700;padding:9px 17px}
+.toast{background:#1C1E21;border-radius:9px;bottom:22px;color:white;font-size:13px;opacity:0;padding:12px 17px;position:fixed;right:22px;transform:translateY(10px);transition:.25s;z-index:200}.toast.show{opacity:1;transform:none}
+.document-tabs{border-bottom:1px solid var(--border);display:flex;gap:6px;margin-bottom:20px}.document-tab{background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font-weight:700;padding:12px 17px}.document-tab.active{border-bottom-color:var(--blue);color:var(--blue)}
+.upload-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);max-width:900px;padding:20px;width:66.666%}
+.upload-card h2{font-size:17px;margin-bottom:4px}.upload-subtitle{color:var(--muted);font-size:12px;margin-bottom:18px}
+.upload-grid{display:grid;gap:14px;grid-template-columns:1fr 1fr}.upload-field{min-width:0}.upload-field.full{grid-column:1/-1}.upload-field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.upload-field input,.upload-field select{background:var(--bg);border:1px solid var(--border);border-radius:9px;outline:0;padding:11px 12px;width:100%}.upload-field input:focus,.upload-field select:focus{background:white;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,119,242,.1)}
+.upload-file{border:1px dashed #A8C7F0!important;padding:14px!important}.upload-action{background:var(--blue);border:0;border-radius:9px;color:white;font-weight:700;margin-top:16px;padding:12px 16px;width:100%}.upload-action:hover{background:var(--blue-dark)}.upload-action:disabled{cursor:not-allowed;opacity:.65}
+.upload-progress{display:none;margin-top:14px}.upload-progress-track{background:#E4E6EB;border-radius:20px;height:9px;overflow:hidden}.upload-progress-fill{background:var(--blue);height:100%;transition:width .2s;width:0}.upload-progress-text{color:var(--muted);font-size:12px;margin-top:6px;text-align:center}
+.status-pending{background:#FFF4D6;color:#A66A00}.status-approved{background:var(--green-light);color:var(--green)}.status-rejected{background:var(--red-light);color:var(--red)}
+.preview-modal{max-width:920px}.preview-layout{display:grid;gap:18px;grid-template-columns:280px minmax(0,1fr)}.preview-info{background:var(--bg);border-radius:10px;padding:15px}.preview-info p{font-size:13px;line-height:1.55;margin-bottom:9px}.preview-frame{background:#EEF1F5;border:1px solid var(--border);border-radius:10px;height:480px;overflow:hidden}.preview-frame iframe{border:0;height:100%;width:100%}.preview-unavailable{align-items:center;color:var(--muted);display:flex;height:100%;justify-content:center;padding:20px;text-align:center}.reject-box{display:none;margin-top:14px}.reject-box textarea{border:1px solid var(--border);border-radius:9px;min-height:90px;padding:11px;resize:vertical;width:100%}.danger-save{background:var(--red)}
+@media(max-width:980px){.stats{grid-template-columns:repeat(2,1fr)}.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:none}.main{margin-left:0;width:100%}.menu-btn{display:block}}
+@media(max-width:850px){.upload-card{width:100%}}
+@media(max-width:620px){.content{padding:15px}.stats{grid-template-columns:1fr}.filters{flex-direction:column}.filter-select{height:42px}.panel-head{align-items:flex-start;flex-wrap:wrap}.add-btn{width:100%}.grid-2,.upload-grid{grid-template-columns:1fr}.upload-field.full{grid-column:auto}.pagination>span{display:none}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">S15</div><div class="brand-name"><span>Admin</span> Center</div></div>
+    <nav class="nav">
+      <div class="nav-title">Quản trị hệ thống</div>
+      <div class="nav-item active" onclick="showAdminSection('accounts',this)"><span class="nav-icon">👥</span>Quản lý tài khoản</div>
+      <div class="nav-item" onclick="showAdminSection('documents',this)"><span class="nav-icon">📚</span>Quản lý tài liệu</div>
+    </nav>
+    <div class="admin-profile"><div class="admin-avatar">AD</div><div><strong>Quản trị viên</strong><small>Administrator</small></div></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="page-title">Quản lý tài khoản</div><div class="top-spacer"></div><button class="logout" onclick="logoutAdmin()">Đăng xuất</button></header>
+    <div class="content">
+      <div id="accountSection">
+      <section class="welcome"><h1>Xin chào, Admin 👋</h1><p>Theo dõi và quản lý tài khoản người dùng trong hệ thống S15.</p></section>
+      <section class="stats">
+        <article class="stat"><div class="stat-icon">👥</div><div><strong id="totalCount">6</strong><span>Tổng tài khoản</span></div></article>
+        <article class="stat"><div class="stat-icon">✅</div><div><strong id="activeCount">5</strong><span>Đang hoạt động</span></div></article>
+        <article class="stat"><div class="stat-icon">🔒</div><div><strong id="lockedCount">1</strong><span>Đã khóa</span></div></article>
+        <article class="stat"><div class="stat-icon">⭐</div><div><strong>1</strong><span>Quản trị viên</span></div></article>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><div><h2>Danh sách tài khoản</h2><p>Quản lý thông tin, vai trò và trạng thái tài khoản.</p></div><div class="head-spacer"></div><button class="add-btn" onclick="openModal()">＋ Thêm tài khoản</button></div>
+        <div class="filters">
+          <label class="search">🔎<input id="searchInput" oninput="filterUsers()" placeholder="Tìm theo tên, username hoặc email..."></label>
+          <select class="filter-select" id="roleFilter" onchange="filterUsers()"><option value="">Tất cả vai trò</option><option value="USER">Học sinh</option><option value="ADMIN">Quản trị viên</option></select>
+          <select class="filter-select" id="statusFilter" onchange="filterUsers()"><option value="">Tất cả trạng thái</option><option value="active">Hoạt động</option><option value="locked">Đã khóa</option></select>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Tài khoản</th><th>Username</th><th>Vai trò</th><th>Trạng thái</th><th>Cảnh báo</th><th>Thao tác</th></tr></thead><tbody id="userRows"></tbody></table><div class="empty" id="emptyState">🔎<br>Không tìm thấy tài khoản phù hợp.</div></div>
+        <div class="pagination"><span>Hiển thị dữ liệu tài khoản hiện có</span><div class="pages"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">›</button></div></div>
+      </section>
+      </div>
+      <div id="documentSection" style="display:none">
+        <section class="welcome"><h1>Quản lý tài liệu 📚</h1><p>Đăng tài liệu của Admin và duyệt tài liệu do người dùng đề xuất.</p></section>
+        <div class="document-tabs"><button class="document-tab active" id="uploadDocumentTab" onclick="showDocumentTab('upload')">📤 Đăng tài liệu</button><button class="document-tab" id="listDocumentTab" onclick="showDocumentTab('list')">📚 Danh sách tài liệu</button><button class="document-tab" id="historyDocumentTab" onclick="showDocumentTab('history')">🕘 Lịch sử duyệt</button></div>
+        <div id="documentUploadView">
+          <section class="upload-card">
+            <h2>📤 Đăng tài liệu mới</h2><p class="upload-subtitle">Tài liệu do Admin đăng được duyệt và hiển thị ngay.</p>
+            <div class="upload-grid">
+              <div class="upload-field full"><label for="adminDocumentName">Tên tài liệu *</label><input id="adminDocumentName" placeholder="Ví dụ: Đề thi thử Toán 12"></div>
+              <div class="upload-field"><label for="adminDocumentSubject">Môn học *</label><select id="adminDocumentSubject"><option value="">Đang tải môn học...</option></select></div>
+              <div class="upload-field"><label for="adminDocumentType">Loại tài liệu *</label><select id="adminDocumentType"><option value="Đề thi">Đề thi</option><option value="Lý thuyết">Lý thuyết</option><option value="Bài tập">Bài tập</option><option value="Tóm tắt">Tóm tắt</option><option value="Video bài giảng">Video bài giảng</option></select></div>
+              <div class="upload-field full"><label for="adminDocumentFile">File tài liệu *</label><input class="upload-file" id="adminDocumentFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip"></div>
+            </div>
+            <button class="upload-action" id="adminUploadButton" onclick="openUploadPreview()">👁️ Kiểm tra trước khi đăng</button>
+            <div class="upload-progress" id="adminUploadProgress"><div class="upload-progress-track"><div class="upload-progress-fill" id="adminUploadProgressFill"></div></div><div class="upload-progress-text" id="adminUploadProgressText">Đang tải lên 0%</div></div>
+          </section>
+        </div>
+        <div id="documentListView" style="display:none">
+        <section class="panel" style="margin-bottom:20px">
+          <div class="panel-head"><div><h2>Danh sách tài liệu trong hệ thống</h2><p>Tìm kiếm, chỉnh sửa hoặc xóa tài liệu.</p></div></div>
+          <div class="filters"><label class="search">🔎<input id="documentSearchInput" oninput="filterDocuments()" placeholder="Tìm theo tên, môn học, loại hoặc người đăng..."></label><select class="filter-select" id="documentStatusFilter" onchange="filterDocuments()"><option value="">Tất cả trạng thái</option><option value="APPROVED">Đã duyệt</option><option value="PENDING">Chờ duyệt</option><option value="REJECTED">Từ chối</option></select></div>
+          <div class="table-wrap"><table><thead><tr><th>Tài liệu</th><th>Môn học</th><th>Loại</th><th>Người đăng</th><th>Trạng thái</th><th>Star</th><th>Thao tác</th></tr></thead><tbody id="allDocumentRows"></tbody></table><div class="empty" id="allDocumentEmpty">🔎<br>Không tìm thấy tài liệu phù hợp.</div></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>Tài liệu chờ duyệt</h2><p>Kiểm tra file trước khi phê duyệt hoặc từ chối.</p></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Tài liệu</th><th>Môn học</th><th>Loại</th><th>Người đề xuất</th><th>Ngày gửi</th><th>Thao tác</th></tr></thead><tbody id="pendingDocumentRows"></tbody></table><div class="empty" id="pendingDocumentEmpty">📭<br>Không có tài liệu chờ duyệt.</div></div>
+        </section>
+        </div>
+        <div id="documentHistoryView" style="display:none">
+          <section class="panel">
+            <div class="panel-head"><div><h2>Lịch sử kiểm duyệt</h2><p>Lưu lại các lần Admin duyệt hoặc từ chối đề xuất tài liệu.</p></div></div>
+            <div class="filters"><label class="search">🔎<input id="historySearchInput" oninput="filterReviewHistory()" placeholder="Tìm tên tài liệu, môn học, người gửi hoặc người duyệt..."></label><select class="filter-select" id="historyActionFilter" onchange="filterReviewHistory()"><option value="">Tất cả kết quả</option><option value="APPROVED">Đã duyệt</option><option value="REJECTED">Từ chối</option></select></div>
+            <div class="table-wrap"><table><thead><tr><th>Tài liệu</th><th>Môn học</th><th>Người đề xuất</th><th>Người duyệt</th><th>Kết quả</th><th>Lý do</th><th>Thời gian</th></tr></thead><tbody id="reviewHistoryRows"></tbody></table><div class="empty" id="reviewHistoryEmpty">🕘<br>Chưa có lịch sử kiểm duyệt.</div></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="modal-bg" id="accountModal" onclick="closeFromBackdrop(event)"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Thêm tài khoản</h3><button class="close" onclick="closeModal()">×</button></div><form id="accountForm" onsubmit="saveAccount(event)"><div class="modal-body"><div class="grid-2"><div class="field"><label>Username</label><input id="username" required placeholder="nguyenvana"></div><div class="field"><label>Email</label><input id="email" type="email" required placeholder="email@example.com"></div><div class="field full"><label id="passwordLabel">Mật khẩu</label><input id="password" type="password" minlength="6" placeholder="Tối thiểu 6 ký tự"></div><div class="field"><label>Vai trò</label><select id="role"><option value="USER">Học sinh</option><option value="ADMIN">Quản trị viên</option></select></div><div class="field"><label>Trạng thái</label><select id="status"><option value="active">Hoạt động</option><option value="locked">Đã khóa</option></select></div></div></div><div class="modal-foot"><button type="button" class="cancel" onclick="closeModal()">Hủy</button><button class="save">Lưu tài khoản</button></div></form></div></div>
+<div class="modal-bg" id="documentModal" onclick="closeDocumentModalFromBackdrop(event)"><div class="modal"><div class="modal-head"><h3>Chỉnh sửa tài liệu</h3><button class="close" onclick="closeDocumentModal()">×</button></div><form onsubmit="saveDocumentEdit(event)"><div class="modal-body"><div class="field"><label>Tên tài liệu</label><input id="editDocumentName" required></div><div class="grid-2"><div class="field"><label>Môn học</label><select id="editDocumentSubject" required></select></div><div class="field"><label>Loại tài liệu</label><select id="editDocumentType"><option value="Đề thi">Đề thi</option><option value="Lý thuyết">Lý thuyết</option><option value="Bài tập">Bài tập</option><option value="Tóm tắt">Tóm tắt</option><option value="Video bài giảng">Video bài giảng</option></select></div></div></div><div class="modal-foot"><button type="button" class="cancel" onclick="closeDocumentModal()">Hủy</button><button class="save">Lưu thay đổi</button></div></form></div></div>
+<div class="modal-bg" id="uploadPreviewModal"><div class="modal preview-modal"><div class="modal-head"><h3>Xác nhận đăng tài liệu</h3><button class="close" onclick="closeUploadPreview()">×</button></div><div class="modal-body"><div class="preview-layout"><div class="preview-info" id="uploadPreviewInfo"></div><div class="preview-frame" id="uploadPreviewFrame"></div></div></div><div class="modal-foot"><button class="cancel" onclick="closeUploadPreview()">Quay lại chỉnh sửa</button><button class="save" onclick="confirmAdminUpload()">Xác nhận đăng</button></div></div></div>
+<div class="modal-bg" id="reviewPreviewModal"><div class="modal preview-modal"><div class="modal-head"><h3>Kiểm tra tài liệu đề xuất</h3><button class="close" onclick="closeReviewPreview()">×</button></div><div class="modal-body"><div class="preview-layout"><div class="preview-info" id="reviewPreviewInfo"><div class="reject-box" id="reviewRejectBox"><label><strong>Lý do từ chối</strong></label><textarea id="reviewRejectReason" placeholder="Nhập lý do cụ thể để người dùng chỉnh sửa..."></textarea></div></div><div class="preview-frame" id="reviewPreviewFrame"></div></div></div><div class="modal-foot"><button class="cancel" onclick="closeReviewPreview()">Đóng</button><button class="save danger-save" onclick="showRejectForm()">Từ chối</button><button class="save" onclick="submitReview('APPROVED')">Duyệt tài liệu</button></div></div></div>
+<div class="modal-bg" id="lockUserModal"><div class="modal"><div class="modal-head"><h3>Khóa tài khoản</h3><button class="close" onclick="closeLockUserModal()">×</button></div><div class="modal-body"><p id="lockUserMessage" style="font-size:13px;margin-bottom:14px"></p><div class="field"><label>Lý do khóa tài khoản *</label><textarea id="lockUserReason" placeholder="Ví dụ: Spam đăng tài liệu nhiều lần..." style="border:1px solid var(--border);border-radius:9px;min-height:100px;padding:11px;resize:vertical;width:100%"></textarea></div></div><div class="modal-foot"><button class="cancel" onclick="closeLockUserModal()">Hủy</button><button class="save danger-save" onclick="confirmLockUser()">Xác nhận khóa</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+let editingId=null;
+let users=[];
+let documents=[];
+let editingDocumentId=null;
+let reviewHistory=[];
+let pendingDocuments=[];
+let reviewingDocumentId=null;
+let adminUploadPreviewUrl=null;
+let lockingUserId=null;
+function initials(name){return name.split(' ').slice(-2).map(x=>x[0]).join('').toUpperCase()}
+function escapeHtml(value){return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function renderUsers(list=users){const body=document.getElementById('userRows');document.getElementById('emptyState').style.display=list.length?'none':'block';body.innerHTML=list.map(u=>`<tr><td><div class="user"><div class="avatar">${initials(u.username)}</div><div><strong>${escapeHtml(u.username)}</strong><small>${escapeHtml(u.email)}</small></div></div></td><td>@${escapeHtml(u.username)}</td><td><span class="role">${u.role==='ADMIN'?'Quản trị viên':'Học sinh'}</span></td><td><span class="badge ${u.status==='active'?'active-badge':'locked-badge'}">${u.status==='active'?'● Hoạt động':'● Đã khóa'}</span>${u.status==='locked'&&u.lockReason?`<br><small title="${escapeHtml(u.lockReason)}">${escapeHtml(u.lockReason)}</small>`:''}</td><td>${u.warningCount}/3</td><td><div class="actions"><button class="icon-btn" title="Chỉnh sửa" onclick="editUser(${u.id})">✏️</button><button class="icon-btn" title="${u.status==='active'?'Khóa':'Mở khóa'}" onclick="toggleStatus(${u.id})">${u.status==='active'?'🔒':'🔓'}</button></div></td></tr>`).join('');updateStats()}
+function normalize(v){return v.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
+function filterUsers(){const q=normalize(document.getElementById('searchInput').value);const role=document.getElementById('roleFilter').value;const status=document.getElementById('statusFilter').value;renderUsers(users.filter(u=>(!q||normalize(`${u.username} ${u.email}`).includes(q))&&(!role||u.role===role)&&(!status||u.status===status)))}
+function updateStats(){document.getElementById('totalCount').textContent=users.length;document.getElementById('activeCount').textContent=users.filter(u=>u.status==='active').length;document.getElementById('lockedCount').textContent=users.filter(u=>u.status==='locked').length}
+function openModal(){editingId=null;document.getElementById('modalTitle').textContent='Thêm tài khoản';document.getElementById('passwordLabel').textContent='Mật khẩu';document.getElementById('password').required=true;document.getElementById('accountForm').reset();document.getElementById('accountModal').classList.add('open')}
+function editUser(id){const u=users.find(x=>x.id===id);if(!u)return;editingId=id;document.getElementById('modalTitle').textContent='Chỉnh sửa tài khoản';document.getElementById('passwordLabel').textContent='Mật khẩu mới (không bắt buộc)';document.getElementById('password').required=false;document.getElementById('password').value='';document.getElementById('username').value=u.username;document.getElementById('email').value=u.email;document.getElementById('role').value=u.role;document.getElementById('status').value=u.status;document.getElementById('accountModal').classList.add('open')}
+function closeModal(){document.getElementById('accountModal').classList.remove('open')}
+function closeFromBackdrop(e){if(e.target.id==='accountModal')closeModal()}
+async function saveAccount(e){e.preventDefault();const data={username:document.getElementById('username').value.trim(),email:document.getElementById('email').value.trim(),password:document.getElementById('password').value,role:document.getElementById('role').value,status:document.getElementById('status').value};const response=await fetch(editingId?`/api/admin/users/${editingId}`:'/api/admin/users',{method:editingId?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok){showToast(result.error||'Không thể lưu tài khoản');return}closeModal();await loadUsers();showToast(editingId?'Đã cập nhật tài khoản':'Đã thêm tài khoản')}
+async function toggleStatus(id){const user=users.find(u=>u.id===id);if(!user)return;if(user.status==='active'){lockingUserId=id;document.getElementById('lockUserMessage').textContent=`Bạn đang khóa tài khoản @${user.username}. Người dùng sẽ nhìn thấy lý do này khi đăng nhập.`;document.getElementById('lockUserReason').value='';document.getElementById('lockUserModal').classList.add('open');return}await updateUserStatus(id,'active',null);showToast('Đã mở khóa tài khoản')}
+function closeLockUserModal(){document.getElementById('lockUserModal').classList.remove('open');lockingUserId=null}
+async function confirmLockUser(){const reason=document.getElementById('lockUserReason').value.trim();if(!reason){showToast('Vui lòng nhập lý do khóa tài khoản');return}const id=lockingUserId;const success=await updateUserStatus(id,'locked',reason);if(success){closeLockUserModal();showToast('Đã khóa tài khoản')}}
+async function updateUserStatus(id,status,lockReason){const response=await fetch(`/api/admin/users/${id}/status`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status,lockReason})});const result=await response.json();if(!response.ok){showToast(result.error||'Không thể cập nhật trạng thái');return false}await loadUsers();return true}
+function toggleMenu(){document.getElementById('sidebar').classList.toggle('open')}
+function showToast(message){const t=document.getElementById('toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+async function loadUsers(){const response=await fetch('/api/admin/users');if(response.status===401||response.status===403){window.location.href='/login';return}if(!response.ok){showToast('Không tải được danh sách tài khoản');return}users=await response.json();filterUsers()}
+async function logoutAdmin(){await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('jwt_token');localStorage.removeItem('student_info');window.location.href='/login'}
+function showAdminSection(section,item){document.getElementById('accountSection').style.display=section==='accounts'?'block':'none';document.getElementById('documentSection').style.display=section==='documents'?'block':'none';document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));item.classList.add('active');document.querySelector('.page-title').textContent=section==='accounts'?'Quản lý tài khoản':'Quản lý tài liệu';if(section==='documents'){loadAdminSubjects();loadPendingDocuments()}if(window.innerWidth<=980)document.getElementById('sidebar').classList.remove('open')}
+async function loadAdminSubjects(){const select=document.getElementById('adminDocumentSubject');if(select.dataset.loaded)return;const response=await fetch('/api/subjects');if(!response.ok){select.innerHTML='<option value="">Không tải được môn học</option>';return}const subjects=await response.json();const options='<option value="">Chọn môn học</option>'+subjects.map(subject=>`<option value="${subject.id}">${escapeHtml(subject.name)}</option>`).join('');select.innerHTML=options;document.getElementById('editDocumentSubject').innerHTML=options;select.dataset.loaded='true'}
+function showDocumentTab(tab){document.getElementById('documentUploadView').style.display=tab==='upload'?'block':'none';document.getElementById('documentListView').style.display=tab==='list'?'block':'none';document.getElementById('documentHistoryView').style.display=tab==='history'?'block':'none';document.getElementById('uploadDocumentTab').classList.toggle('active',tab==='upload');document.getElementById('listDocumentTab').classList.toggle('active',tab==='list');document.getElementById('historyDocumentTab').classList.toggle('active',tab==='history');if(tab==='list'){loadAllDocuments();loadPendingDocuments()}if(tab==='history')loadReviewHistory()}
+function resetAdminUploadProgress(){document.getElementById('adminUploadProgress').style.display='none';document.getElementById('adminUploadProgressFill').style.width='0%';document.getElementById('adminUploadProgressText').textContent='Đang tải lên 0%'}
+function previewFileContent(file,url){if(file&&file.type==='application/pdf')return `<iframe src="${url}" title="Xem trước PDF"></iframe>`;return '<div class="preview-unavailable">Không thể hiển thị trực tiếp định dạng này.<br>Thông tin file vẫn được kiểm tra trước khi đăng.</div>'}
+function openUploadPreview(){const name=document.getElementById('adminDocumentName').value.trim();const subject=document.getElementById('adminDocumentSubject');const type=document.getElementById('adminDocumentType').value;const file=document.getElementById('adminDocumentFile').files[0];if(!name||!subject.value||!type||!file){showToast('Vui lòng nhập đủ thông tin và chọn file');return}if(file.size>50*1024*1024){showToast('File không được vượt quá 50 MB');return}if(adminUploadPreviewUrl)URL.revokeObjectURL(adminUploadPreviewUrl);adminUploadPreviewUrl=URL.createObjectURL(file);document.getElementById('uploadPreviewInfo').innerHTML=`<p><strong>Tên:</strong><br>${escapeHtml(name)}</p><p><strong>Môn học:</strong><br>${escapeHtml(subject.options[subject.selectedIndex].text)}</p><p><strong>Loại:</strong><br>${escapeHtml(type)}</p><p><strong>File:</strong><br>${escapeHtml(file.name)}</p><p><strong>Dung lượng:</strong><br>${(file.size/1024/1024).toFixed(2)} MB</p>`;document.getElementById('uploadPreviewFrame').innerHTML=previewFileContent(file,adminUploadPreviewUrl);document.getElementById('uploadPreviewModal').classList.add('open')}
+function closeUploadPreview(){document.getElementById('uploadPreviewModal').classList.remove('open');if(adminUploadPreviewUrl){URL.revokeObjectURL(adminUploadPreviewUrl);adminUploadPreviewUrl=null}}
+function confirmAdminUpload(){closeUploadPreview();uploadAdminDocument()}
+function uploadAdminDocument(){const name=document.getElementById('adminDocumentName').value.trim();const subjectId=document.getElementById('adminDocumentSubject').value;const type=document.getElementById('adminDocumentType').value;const file=document.getElementById('adminDocumentFile').files[0];if(!name||!subjectId||!type||!file){showToast('Vui lòng nhập đủ thông tin và chọn file');return}if(file.size>50*1024*1024){showToast('File không được vượt quá 50 MB');return}const data=new FormData();data.append('name',name);data.append('subjectId',subjectId);data.append('type',type);data.append('file',file);const button=document.getElementById('adminUploadButton');const progress=document.getElementById('adminUploadProgress');const fill=document.getElementById('adminUploadProgressFill');const text=document.getElementById('adminUploadProgressText');button.disabled=true;button.textContent='Đang đăng tài liệu...';progress.style.display='block';const xhr=new XMLHttpRequest();xhr.open('POST','/api/admin/documents');xhr.upload.onprogress=e=>{if(!e.lengthComputable)return;const percent=Math.round(e.loaded/e.total*100);fill.style.width=percent+'%';text.textContent='Đang tải lên '+percent+'%'};xhr.onload=()=>{let result={};try{result=JSON.parse(xhr.responseText)}catch(e){result={error:xhr.responseText}}button.disabled=false;button.textContent='👁️ Kiểm tra trước khi đăng';if(xhr.status>=200&&xhr.status<300){fill.style.width='100%';text.textContent='Đã tải lên 100%';document.getElementById('adminDocumentName').value='';document.getElementById('adminDocumentFile').value='';showToast('Đăng tài liệu thành công');setTimeout(resetAdminUploadProgress,1200);loadAllDocuments();return}showToast(result.error||'Không thể đăng tài liệu')};xhr.onerror=()=>{button.disabled=false;button.textContent='👁️ Kiểm tra trước khi đăng';showToast('Mất kết nối khi đăng tài liệu')};xhr.send(data)}
+async function loadAllDocuments(){const response=await fetch('/api/admin/documents');if(!response.ok){showToast('Không tải được danh sách tài liệu');return}documents=await response.json();filterDocuments()}
+function filterDocuments(){const q=normalize(document.getElementById('documentSearchInput').value);const status=document.getElementById('documentStatusFilter').value;const filtered=documents.filter(d=>(!q||normalize(`${d.name} ${d.subjectName} ${d.type} ${d.uploadedByUsername}`).includes(q))&&(!status||d.status===status));renderDocuments(filtered)}
+function renderDocuments(list){const rows=document.getElementById('allDocumentRows');document.getElementById('allDocumentEmpty').style.display=list.length?'none':'block';rows.innerHTML=list.map(d=>`<tr><td><strong>${escapeHtml(d.name)}</strong><br><a href="${d.fileUrl}" target="_blank">Xem file</a></td><td>${escapeHtml(d.subjectName)}</td><td>${escapeHtml(d.type)}</td><td>${escapeHtml(d.uploadedByUsername)}</td><td><span class="badge status-${d.status.toLowerCase()}">${documentStatusLabel(d.status)}</span></td><td>⭐ ${d.starCount}</td><td><div class="actions"><button class="icon-btn" title="Chỉnh sửa" onclick="editDocument(${d.id})">✏️</button><button class="icon-btn" title="Xóa" onclick="deleteDocument(${d.id})">🗑️</button></div></td></tr>`).join('')}
+function documentStatusLabel(status){if(status==='APPROVED')return 'Đã duyệt';if(status==='PENDING')return 'Chờ duyệt';return 'Từ chối'}
+function editDocument(id){const documentItem=documents.find(d=>d.id===id);if(!documentItem)return;editingDocumentId=id;document.getElementById('editDocumentName').value=documentItem.name;document.getElementById('editDocumentSubject').value=documentItem.subjectId;document.getElementById('editDocumentType').value=documentItem.type;document.getElementById('documentModal').classList.add('open')}
+function closeDocumentModal(){document.getElementById('documentModal').classList.remove('open')}
+function closeDocumentModalFromBackdrop(e){if(e.target.id==='documentModal')closeDocumentModal()}
+async function saveDocumentEdit(e){e.preventDefault();const data={name:document.getElementById('editDocumentName').value.trim(),subjectId:Number(document.getElementById('editDocumentSubject').value),type:document.getElementById('editDocumentType').value};const response=await fetch(`/api/admin/documents/${editingDocumentId}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok){showToast(result.error||'Không thể cập nhật tài liệu');return}closeDocumentModal();showToast('Đã cập nhật tài liệu');loadAllDocuments();loadPendingDocuments()}
+async function deleteDocument(id){const documentItem=documents.find(d=>d.id===id);if(!documentItem||!confirm(`Xóa tài liệu "${documentItem.name}"? File trên Storage cũng sẽ bị xóa.`))return;const response=await fetch(`/api/admin/documents/${id}`,{method:'DELETE'});const result=await response.json();if(!response.ok){showToast(result.error||'Không thể xóa tài liệu');return}showToast('Đã xóa tài liệu');loadAllDocuments();loadPendingDocuments()}
+async function loadReviewHistory(){const response=await fetch('/api/admin/documents/history');if(!response.ok){showToast('Không tải được lịch sử kiểm duyệt');return}reviewHistory=await response.json();filterReviewHistory()}
+function filterReviewHistory(){const q=normalize(document.getElementById('historySearchInput').value);const action=document.getElementById('historyActionFilter').value;const filtered=reviewHistory.filter(h=>(!q||normalize(`${h.documentName} ${h.subjectName} ${h.uploadedByUsername} ${h.reviewedByUsername}`).includes(q))&&(!action||h.action===action));renderReviewHistory(filtered)}
+function renderReviewHistory(list){const rows=document.getElementById('reviewHistoryRows');document.getElementById('reviewHistoryEmpty').style.display=list.length?'none':'block';rows.innerHTML=list.map(h=>`<tr><td><strong>${escapeHtml(h.documentName)}</strong><br><small>ID: ${h.documentId||'Đã xóa'}</small></td><td>${escapeHtml(h.subjectName)}</td><td>${escapeHtml(h.uploadedByUsername)}</td><td>${escapeHtml(h.reviewedByUsername)}</td><td><span class="badge status-${h.action.toLowerCase()}">${documentStatusLabel(h.action)}</span></td><td>${escapeHtml(h.rejectReason||'—')}</td><td>${formatReviewTime(h.reviewedAt)}</td></tr>`).join('')}
+function formatReviewTime(value){if(!value)return '—';return new Date(value).toLocaleString('vi-VN')}
+async function loadPendingDocuments(){const response=await fetch('/api/admin/documents/pending');if(!response.ok){showToast('Không tải được tài liệu chờ duyệt');return}pendingDocuments=await response.json();const rows=document.getElementById('pendingDocumentRows');document.getElementById('pendingDocumentEmpty').style.display=pendingDocuments.length?'none':'block';rows.innerHTML=pendingDocuments.map(d=>`<tr><td><strong>${escapeHtml(d.name)}</strong><br><a href="${d.fileUrl}" target="_blank">Xem file</a></td><td>${escapeHtml(d.subjectName)}</td><td>${escapeHtml(d.type)}</td><td>${escapeHtml(d.uploadedByUsername)}</td><td>${(d.createdAt||'').slice(0,10)}</td><td><button class="add-btn" onclick="openReviewPreview(${d.id})">Kiểm tra & duyệt</button></td></tr>`).join('')}
+function openReviewPreview(id){const documentItem=pendingDocuments.find(d=>d.id===id);if(!documentItem)return;reviewingDocumentId=id;document.getElementById('reviewRejectBox').style.display='none';document.getElementById('reviewRejectReason').value='';document.getElementById('reviewPreviewInfo').innerHTML=`<p><strong>Tên:</strong><br>${escapeHtml(documentItem.name)}</p><p><strong>Môn học:</strong><br>${escapeHtml(documentItem.subjectName)}</p><p><strong>Loại:</strong><br>${escapeHtml(documentItem.type)}</p><p><strong>Người đề xuất:</strong><br>${escapeHtml(documentItem.uploadedByUsername)}</p><div class="reject-box" id="reviewRejectBox"><label><strong>Lý do từ chối</strong></label><textarea id="reviewRejectReason" placeholder="Nhập lý do cụ thể để người dùng chỉnh sửa..."></textarea></div>`;document.getElementById('reviewPreviewFrame').innerHTML=`<iframe src="${documentItem.fileUrl}" title="Xem trước tài liệu"></iframe>`;document.getElementById('reviewPreviewModal').classList.add('open')}
+function closeReviewPreview(){document.getElementById('reviewPreviewModal').classList.remove('open');reviewingDocumentId=null}
+function showRejectForm(){document.getElementById('reviewRejectBox').style.display='block';document.getElementById('reviewRejectReason').focus();const reason=document.getElementById('reviewRejectReason').value.trim();if(reason)submitReview('REJECTED')}
+async function submitReview(status){const rejectReason=status==='REJECTED'?document.getElementById('reviewRejectReason').value.trim():null;if(status==='REJECTED'&&!rejectReason){showToast('Vui lòng nhập lý do từ chối');return}const response=await fetch(`/api/admin/documents/${reviewingDocumentId}/review`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status,rejectReason})});const result=await response.json();if(!response.ok){showToast(result.error||'Không thể duyệt tài liệu');return}closeReviewPreview();showToast(status==='APPROVED'?'Đã duyệt tài liệu':'Đã từ chối tài liệu');loadPendingDocuments();loadAllDocuments();loadReviewHistory()}
+loadUsers();
+if(sessionStorage.getItem('login_success')==='true'){sessionStorage.removeItem('login_success');setTimeout(()=>showToast('Đăng nhập thành công!'),200)}
+</script>
+</body>
+</html>

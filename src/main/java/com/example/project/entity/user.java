@@ -28,6 +28,9 @@ public class User {
     @Column(name = "warning_count")
     private int warningCount;
 
+    @Column(name = "lock_reason", length = 500)
+    private String lockReason;
+
     public void setId(int id) {this.id = id;}
     public void setPassword(String password) {this.password = password;}
     public void setRole(Role role) {this.role = role;}
@@ -35,6 +38,7 @@ public class User {
     public void setStatus(String status) {this.status = status;}
     public void setWarningCount(int warningCount) {this.warningCount = warningCount;}
     public void setUsername(String username) {this.username = username;}
+    public void setLockReason(String lockReason) {this.lockReason = lockReason;}
     
     public int getId() {return id;}
     public String getPassword() {return password;}
@@ -43,4 +47,5 @@ public class User {
     public String getStatus() {return status;}
     public int getWarningCount() {return warningCount;}
     public String getUsername() {return username;}
+    public String getLockReason() {return lockReason;}
 }

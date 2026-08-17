@@ -23,7 +23,7 @@ public class Student {
     private int starCount;
 
     @Column(name = "birthday")
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     @Column(name = "school_name")
     private String schoolName;
@@ -41,7 +41,7 @@ public class Student {
 
     }
 
-    public Student(int id, String usernameDisplay, int starCount, LocalDateTime birthday, String schoolName, int userId, String avatarUrl, String gender) {
+    public Student(int id, String usernameDisplay, int starCount, LocalDate birthday, String schoolName, int userId, String avatarUrl, String gender) {
         this.id = id;
         this.usernameDisplay = usernameDisplay;
         this.starCount = starCount;

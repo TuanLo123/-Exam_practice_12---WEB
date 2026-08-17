@@ -11,6 +11,22 @@ body {
     background: #f5f7fb
 }
 
+.login-error-box {
+    display: none;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 10px;
+    color: #be123c;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    padding: 11px 13px;
+}
+
+.login-error-box.show {
+    display: block;
+}
+
 .page-container {
     min-height: 100vh;
     display: flex;

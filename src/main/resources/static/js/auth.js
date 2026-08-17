@@ -1,14 +1,18 @@
-// ==================== REGISTER ====================
-
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
     registerForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const username = document.getElementById("registerUsername").value;
-        const email = document.getElementById("registerEmail").value;
-        const password = document.getElementById("registerPassword").value;
+        const username =
+            document.getElementById("registerUsername").value;
+
+        const email =
+            document.getElementById("registerEmail").value;
+
+        const password =
+            document.getElementById("registerPassword").value;
+
         const confirmPassword =
             document.getElementById("confirmPassword").value;
 
@@ -35,13 +39,15 @@ if (registerForm) {
             if (response.ok) {
                 alert(data.message);
 
-                // Sau khi đăng ký thành công
                 registerForm.reset();
 
-                // Có thể chuyển về đăng nhập
                 document.querySelector(".login").click();
             } else {
-                alert(data.error || "Đăng ký thất bại!");
+                alert(
+                    data.error ||
+                    data.message ||
+                    "Đăng ký thất bại!"
+                );
             }
 
         } catch (error) {
@@ -52,13 +58,15 @@ if (registerForm) {
 }
 
 
-// ==================== LOGIN ====================
-
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
     loginForm.addEventListener("submit", async function (e) {
         e.preventDefault();
+
+        const loginErrorBox = document.getElementById("loginErrorBox");
+        loginErrorBox.textContent = "";
+        loginErrorBox.classList.remove("show");
 
         const username =
             document.getElementById("loginUsername").value;
@@ -81,17 +89,72 @@ if (loginForm) {
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.message);
 
-                window.location.href = "/home";
+                localStorage.setItem(
+                    "jwt_token",
+                    data.token
+                );
+
+                localStorage.setItem(
+                    "user_role",
+                    data.role
+                );
+
+                sessionStorage.setItem("login_success", "true");
+
+                if (data.role === "ADMIN") {
+                    window.location.href = "/admin";
+                    return;
+                }
+
+                const studentResponse = await fetch(
+                    "/api/students/me",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization":
+                                `Bearer ${data.token}`
+                        }
+                    }
+                );
+
+                if (studentResponse.ok) {
+
+                    window.location.href = "/home";
+
+                } else if (studentResponse.status === 404) {
+
+                    window.location.href =
+                        "/enter-information";
+
+                } else if (studentResponse.status === 401) {
+
+                    localStorage.removeItem("jwt_token");
+
+                    alert(
+                        "Phiên đăng nhập không hợp lệ!"
+                    );
+
+                    window.location.href = "/login";
+
+                } else {
+
+                    alert(
+                        "Không thể kiểm tra thông tin học sinh!"
+                    );
+                }
 
             } else {
-                alert(data.error || "Đăng nhập thất bại!");
+                loginErrorBox.textContent = data.error || data.message || "Đăng nhập thất bại!";
+                loginErrorBox.classList.add("show");
             }
 
         } catch (error) {
+
             console.error(error);
-            alert("Không thể kết nối đến server!");
+
+            loginErrorBox.textContent = "Không thể kết nối đến server!";
+            loginErrorBox.classList.add("show");
         }
     });
 }

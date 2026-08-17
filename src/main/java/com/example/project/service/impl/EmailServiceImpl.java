@@ -108,7 +108,7 @@ public class EmailServiceImpl implements EmailService {
                                               </div>
 
                                               <p style="font-size: 13px; color: #888;">
-                                                Mã này sẽ hết hạn sau 5 phút.
+                                                Mã này sẽ hết hạn sau 5 phút. Nếu bạn không có nhu cầu vui lòng bỏ qua email này.
                                               </p>
                                             </div>
 

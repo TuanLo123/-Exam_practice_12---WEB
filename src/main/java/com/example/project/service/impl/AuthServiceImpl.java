@@ -13,6 +13,7 @@ import com.example.project.dto.request.ForgotPasswordRequest;
 import com.example.project.dto.request.LoginRequest;
 import com.example.project.dto.request.RegisterRequest;
 import com.example.project.dto.request.ResetPasswordRequest;
+import com.example.project.dto.response.LoginResponse;
 import com.example.project.entity.Role;
 import com.example.project.entity.User;
 import com.example.project.repository.RoleRepository;
@@ -42,14 +43,30 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("Tên đăng nhập hoặc mật khẩu không đúng"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Tên đăng nhập hoặc mật khẩu không đúng");
+        }
+
+        if ("locked".equalsIgnoreCase(user.getStatus())) {
+            String reason = user.getLockReason() == null || user.getLockReason().isBlank()
+                    ? "Không có lý do cụ thể" : user.getLockReason();
+            throw new RuntimeException("Tài khoản đã bị khóa. Lý do: " + reason);
+        }
+
         Authentication authentication = authenticationManager.authenticate(new
             UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        return jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken(userDetails);
+        String role = user.getRole().getRoleName();
+
+        return new LoginResponse(token, role);
     }
 
     @Override
