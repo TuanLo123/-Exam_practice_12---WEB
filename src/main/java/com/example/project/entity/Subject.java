@@ -1,5 +1,6 @@
 package com.example.project.entity;
 
+import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,18 +11,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "subjects")
 @Getter
 @Setter
-@Table(name = "roles")
-public class Role {
+public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    @Column(name = "role_name")
-    private String roleName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "code")
+    private String code;
 
+    @Column(name = "status")
+    private String status;
 }

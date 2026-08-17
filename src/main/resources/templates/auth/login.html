@@ -22,31 +22,31 @@
                         <div class="swiper-slide text-only-slide">
                             <div class="slide-content">
                                 <h1 class="brand-title">S15</h1>
-                                <p>Hệ thống quản lý giải pháp công nghệ toàn diện.</p>
+                                <p>Ứng dụng giúp học sinh lớp 12 ÔN TẬP TN THPT</p>
                             </div>
                         </div>
 
                         <div class="swiper-slide">
                             <img th:src="@{/images/welcome/intro1.png}" src="/images/welcome/intro1.png" alt="Intro 1">
                             <div class="slide-content">
-                                <h3>Tính năng vượt trội</h3>
-                                <p>Tối ưu hóa quy trình làm việc và quản lý dữ liệu hiệu quả.</p>
+                                <h3>Cộng đồng</h3>
+                                <p>Có một kênh cộng đồng cho phép trao đỏi học tập</p>
                             </div>
                         </div>
 
                         <div class="swiper-slide">
                             <img th:src="@{/images/welcome/intro2.png}" src="/images/welcome/intro2.png" alt="Intro 2">
                             <div class="slide-content">
-                                <h3>Bảo mật an toàn</h3>
-                                <p>Phân quyền và mã hóa dữ liệu nghiêm ngặt.</p>
+                                <h3>Tài liệu và đề ôn</h3>
+                                <p>Có nhiều tài liệu SGK, đề thi, để ôn của các trường và đề thi TN THPT qua các năm.</p>
                             </div>
                         </div>
 
                         <div class="swiper-slide">
                             <img th:src="@{/images/welcome/intro3.png}" src="/images/welcome/intro3.png" alt="Intro 3">
                             <div class="slide-content">
-                                <h3>Hỗ trợ 24/7</h3>
-                                <p>Luôn đồng hành cùng doanh nghiệp.</p>
+                                <h3>Bài Test</h3>
+                                <p>Nhiều bài trắc nghiệm tạo ra giúp ôn tập và 1 số bài test giống với cấu trúc của các đề thi theo môn.</p>
                             </div>
                         </div>
 
@@ -68,22 +68,40 @@
 
                         <div class="login-box">
                             <h2 style="margin-bottom: 25px; font-size: 24;">Đăng nhập</h2>
-                            
-                            <form th:action="@{/auth/login}" method="post">
-                                <input class="ele" type="text" name="username" placeholder="Tên đăng nhập" required>
-                                <input class="ele" type="password" name="password" placeholder="Mật khẩu" required>
+
+                            <form id="loginForm">
+                                <input class="ele" type="text" id="loginUsername" name="username"
+                                    placeholder="Tên đăng nhập" required>
+
+                                <input class="ele" type="password" id="loginPassword" name="password"
+                                    placeholder="Mật khẩu" required>
+
                                 <button class="clkbtn" type="submit">Đăng nhập</button>
                             </form>
+
+                            <div class="auth-help">
+                                <a href="/forgot-password">Quên mật khẩu?</a>
+                                <span>•</span>
+                                <a href="/contact">Không nhận được email?</a>
+                            </div>
                         </div>
 
                         <div class="signup-box">
                             <h2 style="margin-bottom: 25px; font-size: 24;">Đăng ký</h2>
-                            <form th:action="@{/register}" method="post">
-                                <input class="ele" type="text" name="username" placeholder="Tên đăng nhập" required>
-                                <input class="ele" type="email" name="email" placeholder="Email" required>
-                                <input class="ele" type="password" name="password" placeholder="Mật khẩu" required>
-                                <input class="ele" type="password" name="confirmPassword"
+                            <!-- REGISTER -->
+                            <form id="registerForm">
+                                <input class="ele" type="text" id="registerUsername" name="username"
+                                    placeholder="Tên đăng nhập" required>
+
+                                <input class="ele" type="email" id="registerEmail" name="email" placeholder="Email"
+                                    required>
+
+                                <input class="ele" type="password" id="registerPassword" name="password"
+                                    placeholder="Mật khẩu" required>
+
+                                <input class="ele" type="password" id="confirmPassword" name="confirmPassword"
                                     placeholder="Xác nhận mật khẩu" required>
+
                                 <button class="clkbtn" type="submit">Đăng ký</button>
                             </form>
                         </div>
@@ -99,21 +117,23 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const swiper = new Swiper(".mySwiper", {
-    loop: true,
-    autoplay: {
-        delay: 3000,
-        disableOnInteraction: false
-    },
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true
-    }
-});
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            }
+        });
 
-swiper.update();
-window.dispatchEvent(new Event("resize"));
+        swiper.update();
+        window.dispatchEvent(new Event("resize"));
     </script>
+
     <script th:src="@{/js/form.js}" src="/js/form.js"></script>
+    <script th:src="@{/js/auth.js}"></script>
 </body>
 
 </html>
