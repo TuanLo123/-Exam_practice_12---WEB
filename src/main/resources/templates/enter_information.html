@@ -4,253 +4,1122 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hoàn thiện hồ sơ — S15 Ôn luyện</title>
+
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --blue:#1976D2; --blue-light:#E3F2FD; --blue-dark:#1565C0;
-    --green:#8BC34A; --red:#e53935; --gray:#9E9E9E;
-    --text:#212121; --border:#E0E0E0; --bg:#F5F5F5;
-    --white:#FFFFFF; --radius:15px;
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-  body{background:var(--bg);font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 
-  .card{background:var(--white);border-radius:24px;width:100%;max-width:440px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
-
-  /* HEADER */
-  .screen-title{font-size:28px;font-weight:800;color:var(--blue);margin-bottom:4px}
-  .screen-sub{font-size:14px;color:var(--gray);margin-bottom:24px}
-
-  /* AVATAR */
-  .avatar-wrap{display:flex;justify-content:center;margin-bottom:24px}
-  .avatar-box{position:relative;cursor:pointer}
-  .avatar-img{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--blue-light)}
-  .avatar-badge{
-    position:absolute;bottom:2px;right:2px;
-    width:30px;height:30px;border-radius:50%;
-    background:var(--blue);border:2px solid var(--white);
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer
+  :root {
+    --blue: #1976D2;
+    --blue-light: #E3F2FD;
+    --blue-dark: #1565C0;
+    --green: #8BC34A;
+    --red: #e53935;
+    --gray: #9E9E9E;
+    --text: #212121;
+    --border: #E0E0E0;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --radius: 15px;
   }
-  .avatar-badge svg{width:14px;height:14px;fill:white}
-  #avatarInput{display:none}
 
-  /* LABEL */
-  .field-label{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:block}
-
-  /* INPUT */
-  .input-wrap{
-    display:flex;align-items:center;gap:10px;
-    background:var(--white);border:1.5px solid var(--border);
-    border-radius:var(--radius);padding:0 14px;
-    margin-bottom:14px;transition:border-color .2s
+  body {
+    background: var(--bg);
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
   }
-  .input-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px #1976D215}
-  .input-wrap svg{width:18px;height:18px;fill:var(--gray);flex-shrink:0}
-  .input-wrap input{
-    flex:1;border:none;outline:none;padding:13px 0;
-    font-size:14px;color:var(--text);background:transparent
+
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 920px;
+    padding: 32px 28px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
   }
-  .input-wrap input::placeholder{color:var(--gray)}
 
-  /* GENDER */
-  .gender-box{
-    display:flex;border:1.5px solid var(--border);
-    border-radius:var(--radius);overflow:hidden;margin-bottom:14px
+  .screen-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--blue);
+    margin-bottom: 4px;
   }
-  .gender-option{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;cursor:pointer;transition:background .2s;font-size:14px;font-weight:600;color:var(--gray)}
-  .gender-option input[type=radio]{display:none}
-  .gender-option.selected-male{background:#E3F2FD;color:var(--blue)}
-  .gender-option.selected-female{background:#FCE4EC;color:#E91E63}
-  .gender-divider{width:1px;background:var(--border)}
 
-  /* DATE */
-  .input-wrap input[type=date]::-webkit-calendar-picker-indicator{opacity:.5;cursor:pointer}
-
-  /* SUBMIT */
-  .btn-submit{
-    width:100%;height:52px;background:var(--blue);color:white;
-    border:none;border-radius:var(--radius);font-size:17px;
-    font-weight:700;cursor:pointer;transition:background .2s;
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    margin-top:8px
+  .screen-sub {
+    font-size: 14px;
+    color: var(--gray);
+    margin-bottom: 24px;
   }
-  .btn-submit:hover{background:var(--blue-dark)}
-  .btn-submit:disabled{background:#90CAF9;cursor:not-allowed}
-  .btn-skip{
-    width:100%;background:none;border:none;color:var(--gray);
-    font-size:14px;cursor:pointer;padding:12px;margin-top:4px
+
+  .avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
   }
-  .btn-skip:hover{color:var(--blue)}
 
-  /* SPINNER */
-  .spinner{width:20px;height:20px;border:3px solid #ffffff50;border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* TOAST */
-  .toast{
-    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
-    background:#323232;color:white;padding:12px 24px;border-radius:10px;
-    font-size:14px;opacity:0;transition:all .3s;z-index:999;white-space:nowrap
+  .avatar-box {
+    position: relative;
+    cursor: pointer;
   }
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast.green{background:#388E3C}
-  .toast.red{background:var(--red)}
 
-  /* ERROR */
-  .field-error{font-size:12px;color:var(--red);margin-top:-10px;margin-bottom:10px;display:none}
+  .avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--blue-light);
+  }
+
+  .avatar-badge {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 2px solid var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .avatar-badge svg {
+    width: 14px;
+    height: 14px;
+    fill: white;
+  }
+
+  #avatarInput {
+    display: none;
+  }
+
+  .field-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0 14px;
+    margin-bottom: 14px;
+    transition: border-color .2s;
+  }
+
+  .input-wrap:focus-within {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px #1976D215;
+  }
+
+  .input-wrap svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--gray);
+    flex-shrink: 0;
+  }
+
+  .input-wrap input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 13px 0;
+    font-size: 14px;
+    color: var(--text);
+    background: transparent;
+  }
+
+  .input-wrap input::placeholder {
+    color: var(--gray);
+  }
+
+  .school-combobox {
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .school-combobox .input-wrap {
+    margin-bottom: 0;
+  }
+
+  .school-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: #757575;
+    cursor: pointer;
+    display: flex;
+    font-size: 18px;
+    height: 40px;
+    justify-content: center;
+    width: 32px;
+  }
+
+  .school-toggle.open {
+    transform: rotate(180deg);
+  }
+
+  .school-options {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 13px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .12);
+    display: none;
+    left: 0;
+    margin-top: 6px;
+    max-height: 250px;
+    overflow-y: auto;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+  }
+
+  .school-options.show {
+    display: block;
+  }
+
+  .school-option {
+    background: transparent;
+    border: 0;
+    color: var(--text);
+    cursor: pointer;
+    display: block;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 12px 14px;
+    text-align: left;
+    width: 100%;
+  }
+
+  .school-option:hover,
+  .school-option.active {
+    background: var(--blue-light);
+    color: var(--blue-dark);
+  }
+
+  .school-empty {
+    color: #757575;
+    font-size: 13px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .gender-box {
+    display: flex;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .gender-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: background .2s;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray);
+  }
+
+  .gender-option input[type=radio] {
+    display: none;
+  }
+
+  .gender-option.selected-male {
+    background: #E3F2FD;
+    color: var(--blue);
+  }
+
+  .gender-option.selected-female {
+    background: #FCE4EC;
+    color: #E91E63;
+  }
+
+  .gender-divider {
+    width: 1px;
+    background: var(--border);
+  }
+
+  .input-wrap input[type=date]::-webkit-calendar-picker-indicator {
+    opacity: .5;
+    cursor: pointer;
+  }
+
+  .btn-submit {
+    width: 100%;
+    height: 52px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .btn-submit:hover {
+    background: var(--blue-dark);
+  }
+
+  .btn-submit:disabled {
+    background: #90CAF9;
+    cursor: not-allowed;
+  }
+
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ffffff50;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #323232;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    opacity: 0;
+    transition: all .3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .toast.green {
+    background: #388E3C;
+  }
+
+  .toast.red {
+    background: var(--red);
+  }
+
+  .field-error {
+    font-size: 12px;
+    color: var(--red);
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: none;
+  }
+
+  .subject-section {
+    border-top: 1.5px solid var(--border);
+    margin-top: 22px;
+    padding-top: 22px;
+  }
+
+  .subject-title {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .subject-description {
+    color: #757575;
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+
+  .subject-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .subject-option {
+    align-items: center;
+    border: 1.5px solid var(--border);
+    border-radius: 13px;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+    min-height: 58px;
+    padding: 10px 12px;
+    transition: background .2s, border-color .2s, box-shadow .2s;
+  }
+
+  .subject-option:hover {
+    border-color: #90CAF9;
+  }
+
+  .subject-option:has(input:checked) {
+    background: var(--blue-light);
+    border-color: var(--blue);
+    box-shadow: 0 0 0 2px #1976D212;
+  }
+
+  .subject-icon {
+    font-size: 23px;
+    line-height: 1;
+  }
+
+  .subject-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .subject-option input {
+    accent-color: var(--blue);
+    cursor: pointer;
+    height: 19px;
+    width: 19px;
+  }
+
+  .subject-state {
+    color: var(--gray);
+    font-size: 13px;
+    padding: 14px 0;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .card {
+      max-width: 440px;
+    }
+
+    .subject-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 </head>
+
 <body>
 
 <div class="card">
-  <div class="screen-title">Hoàn thiện hồ sơ</div>
-  <div class="screen-sub">Nhập thông tin để bắt đầu học tập</div>
 
-  <!-- AVATAR -->
+  <div class="screen-title">Hoàn thiện hồ sơ</div>
+
+  <div class="screen-sub">
+    Nhập thông tin để bắt đầu học tập
+  </div>
+
   <div class="avatar-wrap">
-    <div class="avatar-box" onclick="document.getElementById('avatarInput').click()">
-      <img id="avatarPreview" class="avatar-img"
-        src="https://ui-avatars.com/api/?name=S15&background=1976D2&color=fff&size=100" alt="avatar">
+    <div
+      class="avatar-box"
+      onclick="document.getElementById('avatarInput').click()"
+    >
+      <img
+        id="avatarPreview"
+        class="avatar-img"
+        src="https://ui-avatars.com/api/?name=S15&background=1976D2&color=fff&size=100"
+        alt="avatar"
+      >
+
       <div class="avatar-badge">
-        <svg viewBox="0 0 24 24"><path d="M12 15.2A3.2 3.2 0 1 0 12 8.8a3.2 3.2 0 0 0 0 6.4zm7-10.2h-1.83l-1.41-1.6H8.24L6.83 5H5A2 2 0 0 0 3 7v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm-7 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg>
+        <svg viewBox="0 0 24 24">
+          <path d="M12 15.2A3.2 3.2 0 1 0 12 8.8a3.2 3.2 0 0 0 0 6.4zm7-10.2h-1.83l-1.41-1.6H8.24L6.83 5H5A2 2 0 0 0 3 7v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm-7 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+        </svg>
       </div>
     </div>
-    <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(this)">
+
+    <input
+      type="file"
+      id="avatarInput"
+      accept="image/*"
+      onchange="previewAvatar(this)"
+    >
   </div>
 
-  <!-- TÊN HIỂN THỊ -->
-  <label class="field-label">Tên hiển thị *</label>
-  <div class="input-wrap" id="wrap-name">
-    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-    <input type="text" id="nameDisplay" placeholder="Ví dụ: Nguyễn Văn A" oninput="clearError('err-name')">
-  </div>
-  <div class="field-error" id="err-name">Vui lòng nhập tên hiển thị</div>
+  <label class="field-label">
+    Tên hiển thị *
+  </label>
 
-  <!-- NGÀY SINH -->
-  <label class="field-label">Ngày sinh</label>
   <div class="input-wrap">
-    <svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>
-    <input type="date" id="birthday" max="2015-01-01" min="1990-01-01">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+    </svg>
+
+    <input
+      type="text"
+      id="nameDisplay"
+      placeholder="Ví dụ: Nguyễn Văn A"
+      oninput="clearError('err-name')"
+    >
   </div>
 
-  <!-- TRƯỜNG HỌC -->
-  <label class="field-label">Trường học</label>
+  <div class="field-error" id="err-name">
+    Vui lòng nhập tên hiển thị
+  </div>
+
+  <label class="field-label">
+    Ngày sinh
+  </label>
+
   <div class="input-wrap">
-    <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17 5 13.18z"/></svg>
-    <input type="text" id="schoolName" placeholder="Nhập tên trường">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/>
+    </svg>
+
+    <input
+      type="date"
+      id="birthday"
+      max="2015-01-01"
+      min="1990-01-01"
+    >
   </div>
 
-  <!-- GIỚI TÍNH -->
-  <label class="field-label">Giới tính</label>
-  <div class="gender-box" id="genderBox">
-    <label class="gender-option selected-male" id="lbl-nam" onclick="selectGender('Nam')">
-      <input type="radio" name="gender" value="Nam" checked>
+  <label class="field-label">
+    Trường học
+  </label>
+
+  <div class="school-combobox" id="schoolCombobox">
+    <div class="input-wrap">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17 5 13.18z"/>
+      </svg>
+
+      <input
+        type="text"
+        id="schoolName"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-controls="schoolOptions"
+        aria-expanded="false"
+        autocomplete="off"
+        placeholder="Gõ để tìm tên trường"
+      >
+
+      <button class="school-toggle" id="schoolToggle" type="button"
+        aria-label="Mở danh sách trường">⌄</button>
+    </div>
+
+    <div class="school-options" id="schoolOptions" role="listbox"></div>
+  </div>
+
+  <label class="field-label">
+    Giới tính
+  </label>
+
+  <div class="gender-box">
+
+    <label
+      class="gender-option selected-male"
+      id="lbl-nam"
+      onclick="selectGender('Nam')"
+    >
+      <input
+        type="radio"
+        name="gender"
+        value="Nam"
+        checked
+      >
+
       👦 Nam
     </label>
+
     <div class="gender-divider"></div>
-    <label class="gender-option" id="lbl-nu" onclick="selectGender('Nữ')">
-      <input type="radio" name="gender" value="Nữ">
+
+    <label
+      class="gender-option"
+      id="lbl-nu"
+      onclick="selectGender('Nữ')"
+    >
+      <input
+        type="radio"
+        name="gender"
+        value="Nữ"
+      >
+
       👧 Nữ
     </label>
+
   </div>
 
-  <!-- NÚT LƯU -->
-  <button class="btn-submit" id="btnSubmit" onclick="submitForm()">
-    <span id="btnText">Bắt đầu học ngay 🚀</span>
-    <div class="spinner" id="spinner" style="display:none"></div>
+  <section class="subject-section" aria-labelledby="subjectTitle">
+    <h2 class="subject-title" id="subjectTitle">📚 Môn học đang theo dõi</h2>
+    <p class="subject-description">
+      Chọn các môn bạn đang học để nhận đúng tài liệu về sau
+    </p>
+
+    <div class="subject-grid" id="subjectGrid" aria-live="polite">
+      <div class="subject-state">Đang tải danh sách môn học...</div>
+    </div>
+
+    <div class="field-error" id="err-subject">
+      Vui lòng chọn ít nhất một môn học
+    </div>
+  </section>
+
+  <button
+    class="btn-submit"
+    id="btnSubmit"
+    onclick="submitForm()"
+  >
+    <span id="btnText">
+      Bắt đầu học ngay 🚀
+    </span>
+
+    <div
+      class="spinner"
+      id="spinner"
+      style="display:none"
+    ></div>
   </button>
-  <button class="btn-skip" onclick="skipForm()">Bỏ qua, tôi sẽ làm sau</button>
+
 </div>
 
-<div class="toast" id="toast"></div>
+<div
+  class="toast"
+  id="toast"
+></div>
 
 <script>
-const BASE = 'http://localhost:8080';
-let selectedGender = 'Nam';
+let selectedGender = "Nam";
+let selectedSubjectIds = new Set();
+let schools = [];
+let filteredSchools = [];
+let activeSchoolIndex = -1;
 
-// ── AVATAR PREVIEW ──
-function previewAvatar(input) {
-  if (!input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = e => document.getElementById('avatarPreview').src = e.target.result;
-  reader.readAsDataURL(input.files[0]);
+const subjectIcons = {
+    "TOAN": "🔢",
+    "LY": "⚡",
+    "VATLY": "⚡",
+    "HOA": "🧪",
+    "HOAHOC": "🧪",
+    "SINH": "🔬",
+    "SINHHOC": "🔬",
+    "VAN": "📖",
+    "NGUVAN": "📖",
+    "ANH": "🌍",
+    "TIENGANH": "🌍",
+    "SU": "🏛️",
+    "LICHSU": "🏛️",
+    "DIA": "🗺️",
+    "DIALY": "🗺️"
+};
+
+function normalizeSubject(value = "") {
+    return value
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/Đ/g, "D")
+        .replace(/đ/g, "d")
+        .replace(/[^a-zA-Z0-9]/g, "")
+        .toUpperCase();
 }
 
-// ── GENDER SELECT ──
-function selectGender(g) {
-  selectedGender = g;
-  document.getElementById('lbl-nam').className = 'gender-option' + (g === 'Nam' ? ' selected-male' : '');
-  document.getElementById('lbl-nu').className  = 'gender-option' + (g === 'Nữ'  ? ' selected-female' : '');
+function normalizeSearch(value = "") {
+    return value
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/Đ/g, "D")
+        .replace(/đ/g, "d")
+        .toLowerCase()
+        .trim();
 }
 
-// ── VALIDATION ──
-function clearError(id) { document.getElementById(id).style.display = 'none'; }
-function showError(id, msg) {
-  const el = document.getElementById(id);
-  el.textContent = msg; el.style.display = 'block';
+function setSchoolDropdown(open) {
+    const options = document.getElementById("schoolOptions");
+    const input = document.getElementById("schoolName");
+    const toggle = document.getElementById("schoolToggle");
+
+    options.classList.toggle("show", open);
+    toggle.classList.toggle("open", open);
+    input.setAttribute("aria-expanded", String(open));
 }
 
-// ── TOAST ──
-function showToast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + type + ' show';
-  setTimeout(() => t.className = 'toast ' + type, 2800);
+function renderSchoolOptions(query = "") {
+    const normalizedQuery = normalizeSearch(query);
+    const options = document.getElementById("schoolOptions");
+
+    filteredSchools = schools.filter(function (school) {
+        return normalizeSearch(school.name).includes(normalizedQuery);
+    }).slice(0, 50);
+    activeSchoolIndex = -1;
+
+    if (!filteredSchools.length) {
+        options.innerHTML = '<div class="school-empty">Không tìm thấy trường phù hợp</div>';
+        return;
+    }
+
+    options.innerHTML = filteredSchools.map(function (school, index) {
+        const safeName = String(school.name)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+
+        return `<button type="button" class="school-option" role="option"
+          data-index="${index}" aria-selected="false">${safeName}</button>`;
+    }).join("");
 }
 
-// ── SUBMIT ──
-async function submitForm() {
-  const name   = document.getElementById('nameDisplay').value.trim();
-  const school = document.getElementById('schoolName').value.trim();
-  const bday   = document.getElementById('birthday').value;
+function chooseSchool(index) {
+    const school = filteredSchools[index];
 
-  let valid = true;
-  if (!name) { showError('err-name', 'Vui lòng nhập tên hiển thị'); valid = false; }
-  if (!valid) return;
+    if (!school) {
+        return;
+    }
 
-  setLoading(true);
+    document.getElementById("schoolName").value = school.name;
+    setSchoolDropdown(false);
+}
 
-  const token = localStorage.getItem('jwt_token') || '';
-  const userId = JSON.parse(localStorage.getItem('user_info') || '{}').id || null;
+function updateActiveSchool(index) {
+    const optionElements = document.querySelectorAll(".school-option");
 
-  try {
-    const res = await fetch(`${BASE}/api/students`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        userId,
-        usernameDisplay: name,
-        schoolName: school,
-        birthday: bday || null,
-        gender: selectedGender,
-        starCount: 0
-      })
+    if (!optionElements.length) {
+        return;
+    }
+
+    activeSchoolIndex = Math.max(0, Math.min(index, optionElements.length - 1));
+    optionElements.forEach(function (option, optionIndex) {
+        const active = optionIndex === activeSchoolIndex;
+        option.classList.toggle("active", active);
+        option.setAttribute("aria-selected", String(active));
+    });
+    optionElements[activeSchoolIndex].scrollIntoView({ block: "nearest" });
+}
+
+async function loadSchools() {
+    const options = document.getElementById("schoolOptions");
+
+    try {
+        const response = await fetch("data/schools.json");
+
+        if (!response.ok) {
+            throw new Error("Không thể tải danh sách trường");
+        }
+
+        const data = await response.json();
+        schools = Array.isArray(data) ? data.filter(function (school) {
+            return school && typeof school.name === "string";
+        }) : [];
+        renderSchoolOptions();
+    } catch (error) {
+        console.error(error);
+        options.innerHTML = '<div class="school-empty">Không tải được danh sách trường</div>';
+    }
+}
+
+function setupSchoolCombobox() {
+    const combobox = document.getElementById("schoolCombobox");
+    const input = document.getElementById("schoolName");
+    const toggle = document.getElementById("schoolToggle");
+    const options = document.getElementById("schoolOptions");
+
+    input.addEventListener("focus", function () {
+        renderSchoolOptions(input.value);
+        setSchoolDropdown(true);
     });
 
-    const data = await res.json();
+    input.addEventListener("input", function () {
+        renderSchoolOptions(input.value);
+        setSchoolDropdown(true);
+    });
 
-    if (res.ok) {
-      showToast('✅ Thông tin đã được lưu!', 'green');
-      setTimeout(() => window.location.href = 'trang_chu.html', 1200);
-    } else {
-      showToast(data.error || 'Có lỗi xảy ra', 'red');
-    }
-  } catch(e) {
-    showToast('❌ Không kết nối được server!', 'red');
-  } finally {
-    setLoading(false);
-  }
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowDown") {
+            event.preventDefault();
+            setSchoolDropdown(true);
+            updateActiveSchool(activeSchoolIndex + 1);
+        } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            updateActiveSchool(activeSchoolIndex - 1);
+        } else if (event.key === "Enter" && activeSchoolIndex >= 0) {
+            event.preventDefault();
+            chooseSchool(activeSchoolIndex);
+        } else if (event.key === "Escape") {
+            setSchoolDropdown(false);
+        }
+    });
+
+    toggle.addEventListener("click", function () {
+        const isOpen = options.classList.contains("show");
+        renderSchoolOptions(isOpen ? "" : input.value);
+        setSchoolDropdown(!isOpen);
+        input.focus();
+    });
+
+    options.addEventListener("click", function (event) {
+        const option = event.target.closest(".school-option");
+
+        if (option) {
+            chooseSchool(Number(option.dataset.index));
+        }
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!combobox.contains(event.target)) {
+            setSchoolDropdown(false);
+        }
+    });
 }
 
-function skipForm() { window.location.href = 'trang_chu.html'; }
+function getSubjectIcon(subject) {
+    return subjectIcons[normalizeSubject(subject.code)] ||
+        subjectIcons[normalizeSubject(subject.name)] || "📘";
+}
 
-function setLoading(on) {
-  document.getElementById('btnSubmit').disabled = on;
-  document.getElementById('btnText').style.display = on ? 'none' : 'inline';
-  document.getElementById('spinner').style.display = on ? 'block' : 'none';
+function toggleSubject(subjectId, checked) {
+    if (checked) {
+        selectedSubjectIds.add(subjectId);
+    } else {
+        selectedSubjectIds.delete(subjectId);
+    }
+
+    if (selectedSubjectIds.size > 0) {
+        clearError("err-subject");
+    }
+}
+
+function renderSubjects(subjects) {
+    const grid = document.getElementById("subjectGrid");
+
+    if (!subjects.length) {
+        grid.innerHTML = '<div class="subject-state">Chưa có môn học nào đang hoạt động.</div>';
+        return;
+    }
+
+    grid.innerHTML = subjects.map(function (subject) {
+        const subjectId = Number(subject.id);
+        const checked = selectedSubjectIds.has(subjectId) ? " checked" : "";
+        const safeName = String(subject.name || "Môn học")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+
+        return `
+          <label class="subject-option">
+            <span class="subject-icon" aria-hidden="true">${getSubjectIcon(subject)}</span>
+            <span class="subject-name">${safeName}</span>
+            <input type="checkbox" name="subjectIds" value="${subjectId}"
+              aria-label="Chọn ${safeName}"${checked}
+              onchange="toggleSubject(${subjectId}, this.checked)">
+          </label>`;
+    }).join("");
+}
+
+async function loadSubjects() {
+    const token = localStorage.getItem("jwt_token");
+    let savedIds = [];
+
+    try {
+        savedIds = JSON.parse(localStorage.getItem("selected_subject_ids") || "[]");
+    } catch (error) {
+        localStorage.removeItem("selected_subject_ids");
+    }
+
+    if (!Array.isArray(savedIds)) {
+        savedIds = [];
+    }
+
+    selectedSubjectIds = new Set(savedIds.map(Number));
+
+    try {
+        const response = await fetch("/api/subjects", {
+            headers: token ? { "Authorization": `Bearer ${token}` } : {}
+        });
+
+        if (!response.ok) {
+            throw new Error("Không thể tải danh sách môn học");
+        }
+
+        const subjects = await response.json();
+        renderSubjects(subjects.filter(function (subject) {
+            return !subject.status || subject.status.toLowerCase() === "active";
+        }));
+    } catch (error) {
+        console.error(error);
+        document.getElementById("subjectGrid").innerHTML =
+            '<div class="subject-state">Không tải được danh sách môn học. Vui lòng thử lại.</div>';
+    }
+}
+
+function previewAvatar(input) {
+    if (!input.files || !input.files[0]) {
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+        document.getElementById("avatarPreview").src =
+            event.target.result;
+    };
+
+    reader.readAsDataURL(input.files[0]);
+}
+
+function selectGender(gender) {
+    selectedGender = gender;
+
+    const maleLabel =
+        document.getElementById("lbl-nam");
+
+    const femaleLabel =
+        document.getElementById("lbl-nu");
+
+    maleLabel.className =
+        "gender-option" +
+        (gender === "Nam"
+            ? " selected-male"
+            : "");
+
+    femaleLabel.className =
+        "gender-option" +
+        (gender === "Nữ"
+            ? " selected-female"
+            : "");
+}
+
+function clearError(id) {
+    document.getElementById(id).style.display =
+        "none";
+}
+
+function showError(id, message) {
+    const element =
+        document.getElementById(id);
+
+    element.textContent = message;
+    element.style.display = "block";
+}
+
+function showToast(message, type = "") {
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.className =
+        "toast " + type + " show";
+
+    setTimeout(function () {
+        toast.className =
+            "toast " + type;
+    }, 2800);
+}
+
+async function submitForm() {
+
+    const name =
+        document.getElementById("nameDisplay")
+            .value
+            .trim();
+
+    const birthday =
+        document.getElementById("birthday")
+            .value;
+
+    const schoolName =
+        document.getElementById("schoolName")
+            .value
+            .trim();
+
+    if (!name) {
+
+        showError(
+            "err-name",
+            "Vui lòng nhập tên hiển thị"
+        );
+
+        return;
+    }
+
+    if (selectedSubjectIds.size === 0) {
+        showError("err-subject", "Vui lòng chọn ít nhất một môn học");
+        return;
+    }
+
+    const token =
+        localStorage.getItem("jwt_token");
+
+    if (!token) {
+
+        window.location.href = "/login";
+
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+
+        const response = await fetch(
+            "/api/students",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        `Bearer ${token}`
+                },
+
+                body: JSON.stringify({
+                    usernameDisplay: name,
+                    birthday: birthday || null,
+                    schoolName: schoolName,
+                    gender: selectedGender,
+                    starCount: 0
+                })
+            }
+        );
+
+        if (response.ok) {
+
+            const student =
+                await response.json();
+
+            localStorage.setItem(
+                "student_info",
+                JSON.stringify(student)
+            );
+
+            // Giữ danh sách ID để màn chỉnh sửa và tính năng xuất tài liệu dùng lại.
+            localStorage.setItem(
+                "selected_subject_ids",
+                JSON.stringify(Array.from(selectedSubjectIds))
+            );
+
+            showToast(
+                "Thông tin đã được lưu!",
+                "green"
+            );
+
+            setTimeout(function () {
+                window.location.href = "/home";
+            }, 1000);
+
+            return;
+        }
+
+        if (response.status === 401) {
+
+            localStorage.removeItem(
+                "jwt_token"
+            );
+
+            localStorage.removeItem(
+                "student_info"
+            );
+
+            window.location.href = "/login";
+
+            return;
+        }
+
+        if (response.status === 409) {
+
+            showToast(
+                "Thông tin tài khoản đã tồn tại!",
+                "red"
+            );
+
+            return;
+        }
+
+        let data = {};
+
+        try {
+            data = await response.json();
+        } catch (error) {
+            data = {};
+        }
+
+        showToast(
+            data.message ||
+            data.error ||
+            "Không thể lưu thông tin!",
+            "red"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Không thể kết nối đến server!",
+            "red"
+        );
+
+    } finally {
+
+        setLoading(false);
+    }
+}
+
+function setLoading(loading) {
+
+    const button =
+        document.getElementById("btnSubmit");
+
+    const buttonText =
+        document.getElementById("btnText");
+
+    const spinner =
+        document.getElementById("spinner");
+
+    button.disabled = loading;
+
+    buttonText.style.display =
+        loading ? "none" : "inline";
+
+    spinner.style.display =
+        loading ? "block" : "none";
+}
+
+setupSchoolCombobox();
+loadSchools();
+loadSubjects();
+if (sessionStorage.getItem("login_success") === "true") {
+    sessionStorage.removeItem("login_success");
+    setTimeout(function() {
+        showToast("Đăng nhập thành công!", "green");
+    }, 200);
 }
 </script>
+
 </body>
 </html>

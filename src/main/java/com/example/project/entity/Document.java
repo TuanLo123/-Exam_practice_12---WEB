@@ -36,6 +36,12 @@ public class Document {
    @Column(name = "file_url")
    private String fileUrl;
 
+   @Column(name = "storage_path")
+   private String storagePath;
+
+   @Column(name = "reject_reason")
+   private String rejectReason;
+
    @Column(name = "created_at")
    private LocalDateTime createdAt;
 

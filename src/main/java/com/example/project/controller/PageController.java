@@ -20,4 +20,24 @@ public class PageController {
     public String forgotPasswordPage() {
         return "auth/forgot-password";
     }
+
+    @GetMapping("/enter-information")
+    public String enterInformationPage() {
+        return "enter_information";
+    }
+
+    @GetMapping("/home")
+    public String homePage() {
+        return "home";
+    }
+
+    @GetMapping("/admin")
+    public String adminPage() {
+        return "admin";
+    }
+
+    @GetMapping("/documents")
+    public String documentsPage() {
+        return "documents";
+    }
 }

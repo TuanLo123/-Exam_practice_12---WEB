@@ -39,17 +39,29 @@ public class SecurityConfig {
                                 "/register",
                                 "/forgot-password",
                                 "/api/auth/**",
+                                "/enter-information",
+                                "/home",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
+                                "/data/**",
                                 "/favicon.ico")
                         .permitAll()
 
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")
 
+                        .requestMatchers("/api/admin/**")
+                        .hasRole("ADMIN")
+
                         .requestMatchers("/user/**")
                         .hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers("/api/students/**")
+                        .authenticated()
+
+                        .requestMatchers("/api/documents/**")
+                        .authenticated()
 
                         .anyRequest()
                         .authenticated())
