@@ -8,9 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.project.entity.Student;
 import com.example.project.service.StudentService;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -36,5 +41,16 @@ public class StudentController {
     public Student updateStudent(@PathVariable Integer id, @RequestBody Student student) {
         student.setId(id);
         return studentService.updateStudent(student);
+    }
+
+    @GetMapping
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteStudent(@PathVariable Integer id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.ok(Map.of("messsage", "Xoá học sinh thành công!"));
     }
 }

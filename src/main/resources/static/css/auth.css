@@ -238,3 +238,38 @@ body {
         max-width: 500px
     }
 }
+
+.forgot-password {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    color: #2196F3;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.auth-help {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.auth-help a {
+    color: #1976D2;
+    text-decoration: none;
+}
+
+.auth-help a:hover {
+    text-decoration: underline;
+}
+
+.auth-help span {
+    color: #999;
+}

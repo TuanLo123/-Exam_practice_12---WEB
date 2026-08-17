@@ -2,80 +2,89 @@ package com.example.project.controller;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 
 import com.example.project.dto.request.ForgotPasswordRequest;
 import com.example.project.dto.request.LoginRequest;
 import com.example.project.dto.request.RegisterRequest;
+import com.example.project.dto.request.ResetPasswordRequest;
+import com.example.project.dto.request.VerifyOtpRequest;
 import com.example.project.service.AuthService;
+import com.example.project.service.EmailService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
+@RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
-    @Autowired
     private AuthService authService;
-    
-    @GetMapping("/login")
-    public String loginPage() {
-        return "auth/login";
+    private EmailService emailService;
+
+    public AuthController(AuthService authService, EmailService emailService) {
+        this.authService = authService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginRequest request, Model model) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             String result = authService.login(request);
-            model.addAttribute("message", result);
-            return "home";
+           
+            return ResponseEntity.ok(Map.of("token", result));
+        
         } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "auth/login";
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-    }
-
-    @GetMapping("/register")
-    public String registerPage() {
-        return "auth/login";
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute RegisterRequest request, Model model) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
             String result = authService.register(request);
-            model.addAttribute("message", result);
-            return "auth/login";
+
+            return ResponseEntity.ok(Map.of("message", result));
         } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "auth/login";
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
     
-    @GetMapping("/forgot-password")
-    public String forgotPasswordPage() {
-        return "auth/forgot-password";
-    }
-
     @PostMapping("/forgot-password")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> requestForgotPassword(@ModelAttribute ForgotPasswordRequest request, Model model) {
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         try {
-            authService.requestForgotPassword(request.getEmail());
+            authService.forgotPassword(request);
+
             return ResponseEntity.ok(Map.of("message", "Mã OTP đã được gửi về email"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("error","Lỗi hệ thống"));
         }
     }
-    
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            authService.resetPassword(request);
+
+            return ResponseEntity.ok(
+                Map.of("message", "Đổi mật khẩu thành công")
+            );
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }   
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOtp(@RequestBody VerifyOtpRequest request) {
+        emailService.verifyOtp(request.getEmail(), request.getOtp());
+
+        return ResponseEntity.ok(Map.of("message", "Xác thực OTP thành công"));
+    }
+
 }

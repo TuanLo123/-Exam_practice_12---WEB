@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "otps")
-public class otp {
+public class Otp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

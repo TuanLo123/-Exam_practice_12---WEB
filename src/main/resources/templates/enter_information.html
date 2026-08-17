@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoàn thiện hồ sơ — S15 Ôn luyện</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --blue:#1976D2; --blue-light:#E3F2FD; --blue-dark:#1565C0;
+    --green:#8BC34A; --red:#e53935; --gray:#9E9E9E;
+    --text:#212121; --border:#E0E0E0; --bg:#F5F5F5;
+    --white:#FFFFFF; --radius:15px;
+  }
+  body{background:var(--bg);font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+
+  .card{background:var(--white);border-radius:24px;width:100%;max-width:440px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+
+  /* HEADER */
+  .screen-title{font-size:28px;font-weight:800;color:var(--blue);margin-bottom:4px}
+  .screen-sub{font-size:14px;color:var(--gray);margin-bottom:24px}
+
+  /* AVATAR */
+  .avatar-wrap{display:flex;justify-content:center;margin-bottom:24px}
+  .avatar-box{position:relative;cursor:pointer}
+  .avatar-img{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--blue-light)}
+  .avatar-badge{
+    position:absolute;bottom:2px;right:2px;
+    width:30px;height:30px;border-radius:50%;
+    background:var(--blue);border:2px solid var(--white);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer
+  }
+  .avatar-badge svg{width:14px;height:14px;fill:white}
+  #avatarInput{display:none}
+
+  /* LABEL */
+  .field-label{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:block}
+
+  /* INPUT */
+  .input-wrap{
+    display:flex;align-items:center;gap:10px;
+    background:var(--white);border:1.5px solid var(--border);
+    border-radius:var(--radius);padding:0 14px;
+    margin-bottom:14px;transition:border-color .2s
+  }
+  .input-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px #1976D215}
+  .input-wrap svg{width:18px;height:18px;fill:var(--gray);flex-shrink:0}
+  .input-wrap input{
+    flex:1;border:none;outline:none;padding:13px 0;
+    font-size:14px;color:var(--text);background:transparent
+  }
+  .input-wrap input::placeholder{color:var(--gray)}
+
+  /* GENDER */
+  .gender-box{
+    display:flex;border:1.5px solid var(--border);
+    border-radius:var(--radius);overflow:hidden;margin-bottom:14px
+  }
+  .gender-option{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;cursor:pointer;transition:background .2s;font-size:14px;font-weight:600;color:var(--gray)}
+  .gender-option input[type=radio]{display:none}
+  .gender-option.selected-male{background:#E3F2FD;color:var(--blue)}
+  .gender-option.selected-female{background:#FCE4EC;color:#E91E63}
+  .gender-divider{width:1px;background:var(--border)}
+
+  /* DATE */
+  .input-wrap input[type=date]::-webkit-calendar-picker-indicator{opacity:.5;cursor:pointer}
+
+  /* SUBMIT */
+  .btn-submit{
+    width:100%;height:52px;background:var(--blue);color:white;
+    border:none;border-radius:var(--radius);font-size:17px;
+    font-weight:700;cursor:pointer;transition:background .2s;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-top:8px
+  }
+  .btn-submit:hover{background:var(--blue-dark)}
+  .btn-submit:disabled{background:#90CAF9;cursor:not-allowed}
+  .btn-skip{
+    width:100%;background:none;border:none;color:var(--gray);
+    font-size:14px;cursor:pointer;padding:12px;margin-top:4px
+  }
+  .btn-skip:hover{color:var(--blue)}
+
+  /* SPINNER */
+  .spinner{width:20px;height:20px;border:3px solid #ffffff50;border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* TOAST */
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:#323232;color:white;padding:12px 24px;border-radius:10px;
+    font-size:14px;opacity:0;transition:all .3s;z-index:999;white-space:nowrap
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.green{background:#388E3C}
+  .toast.red{background:var(--red)}
+
+  /* ERROR */
+  .field-error{font-size:12px;color:var(--red);margin-top:-10px;margin-bottom:10px;display:none}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="screen-title">Hoàn thiện hồ sơ</div>
+  <div class="screen-sub">Nhập thông tin để bắt đầu học tập</div>
+
+  <!-- AVATAR -->
+  <div class="avatar-wrap">
+    <div class="avatar-box" onclick="document.getElementById('avatarInput').click()">
+      <img id="avatarPreview" class="avatar-img"
+        src="https://ui-avatars.com/api/?name=S15&background=1976D2&color=fff&size=100" alt="avatar">
+      <div class="avatar-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 15.2A3.2 3.2 0 1 0 12 8.8a3.2 3.2 0 0 0 0 6.4zm7-10.2h-1.83l-1.41-1.6H8.24L6.83 5H5A2 2 0 0 0 3 7v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm-7 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg>
+      </div>
+    </div>
+    <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(this)">
+  </div>
+
+  <!-- TÊN HIỂN THỊ -->
+  <label class="field-label">Tên hiển thị *</label>
+  <div class="input-wrap" id="wrap-name">
+    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+    <input type="text" id="nameDisplay" placeholder="Ví dụ: Nguyễn Văn A" oninput="clearError('err-name')">
+  </div>
+  <div class="field-error" id="err-name">Vui lòng nhập tên hiển thị</div>
+
+  <!-- NGÀY SINH -->
+  <label class="field-label">Ngày sinh</label>
+  <div class="input-wrap">
+    <svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>
+    <input type="date" id="birthday" max="2015-01-01" min="1990-01-01">
+  </div>
+
+  <!-- TRƯỜNG HỌC -->
+  <label class="field-label">Trường học</label>
+  <div class="input-wrap">
+    <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17 5 13.18z"/></svg>
+    <input type="text" id="schoolName" placeholder="Nhập tên trường">
+  </div>
+
+  <!-- GIỚI TÍNH -->
+  <label class="field-label">Giới tính</label>
+  <div class="gender-box" id="genderBox">
+    <label class="gender-option selected-male" id="lbl-nam" onclick="selectGender('Nam')">
+      <input type="radio" name="gender" value="Nam" checked>
+      👦 Nam
+    </label>
+    <div class="gender-divider"></div>
+    <label class="gender-option" id="lbl-nu" onclick="selectGender('Nữ')">
+      <input type="radio" name="gender" value="Nữ">
+      👧 Nữ
+    </label>
+  </div>
+
+  <!-- NÚT LƯU -->
+  <button class="btn-submit" id="btnSubmit" onclick="submitForm()">
+    <span id="btnText">Bắt đầu học ngay 🚀</span>
+    <div class="spinner" id="spinner" style="display:none"></div>
+  </button>
+  <button class="btn-skip" onclick="skipForm()">Bỏ qua, tôi sẽ làm sau</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BASE = 'http://localhost:8080';
+let selectedGender = 'Nam';
+
+// ── AVATAR PREVIEW ──
+function previewAvatar(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => document.getElementById('avatarPreview').src = e.target.result;
+  reader.readAsDataURL(input.files[0]);
+}
+
+// ── GENDER SELECT ──
+function selectGender(g) {
+  selectedGender = g;
+  document.getElementById('lbl-nam').className = 'gender-option' + (g === 'Nam' ? ' selected-male' : '');
+  document.getElementById('lbl-nu').className  = 'gender-option' + (g === 'Nữ'  ? ' selected-female' : '');
+}
+
+// ── VALIDATION ──
+function clearError(id) { document.getElementById(id).style.display = 'none'; }
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.style.display = 'block';
+}
+
+// ── TOAST ──
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.className = 'toast ' + type, 2800);
+}
+
+// ── SUBMIT ──
+async function submitForm() {
+  const name   = document.getElementById('nameDisplay').value.trim();
+  const school = document.getElementById('schoolName').value.trim();
+  const bday   = document.getElementById('birthday').value;
+
+  let valid = true;
+  if (!name) { showError('err-name', 'Vui lòng nhập tên hiển thị'); valid = false; }
+  if (!valid) return;
+
+  setLoading(true);
+
+  const token = localStorage.getItem('jwt_token') || '';
+  const userId = JSON.parse(localStorage.getItem('user_info') || '{}').id || null;
+
+  try {
+    const res = await fetch(`${BASE}/api/students`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        userId,
+        usernameDisplay: name,
+        schoolName: school,
+        birthday: bday || null,
+        gender: selectedGender,
+        starCount: 0
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showToast('✅ Thông tin đã được lưu!', 'green');
+      setTimeout(() => window.location.href = 'trang_chu.html', 1200);
+    } else {
+      showToast(data.error || 'Có lỗi xảy ra', 'red');
+    }
+  } catch(e) {
+    showToast('❌ Không kết nối được server!', 'red');
+  } finally {
+    setLoading(false);
+  }
+}
+
+function skipForm() { window.location.href = 'trang_chu.html'; }
+
+function setLoading(on) {
+  document.getElementById('btnSubmit').disabled = on;
+  document.getElementById('btnText').style.display = on ? 'none' : 'inline';
+  document.getElementById('spinner').style.display = on ? 'block' : 'none';
+}
+</script>
+</body>
+</html>
